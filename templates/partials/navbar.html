@@ -1,0 +1,129 @@
+<header class="bg-primary text-white shadow-md sticky top-0 z-50">
+    <nav class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+
+
+            <!-- Logo and Brand -->
+            <div class="flex items-center space-x-2">
+                <a href="{{ url_for('main.index') }}" class="flex items-center">
+                    <!-- Replace with actual logo -->
+                    <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+                        <span class="text-primary font-bold">FUO</span>
+                    </div>
+                    <span class="ml-2 text-xl font-serif font-bold hidden sm:inline">Alumni</span>
+                    <span class="ml-2 text-xl font-serif font-bold sm:hidden">FUO</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-6 ">
+                <a href="{{ url_for('main.index') }}" class="hover:text-secondary transition-all">Home</a>
+                <a href="{{ url_for('main.about') }}" class="hover:text-secondary transition-all">About</a>
+                {% if current_user.is_authenticated and not current_user.is_admin %}
+                    <a href="{{ url_for('alumni.directory') }}" class="hover:text-secondary transition-all">Directory</a>
+                {% endif %}
+                <a href="{{ url_for('events.index') }}" class="hover:text-secondary transition-all">Events</a>
+                <a href="{{ url_for('contributions.index') }}" class="hover:text-secondary transition-all">Contributions</a>
+                <a href="{{ url_for('main.contact') }}" class="hover:text-secondary transition-all">Contact</a>
+                
+                {% if current_user.is_authenticated %}
+                   <div class="relative">
+                        <button id="dropdownButton" type="button"
+                                class="flex items-center space-x-1 hover:text-secondary transition-all focus:outline-none"
+                                aria-haspopup="true" aria-expanded="false">
+                            <span>Account</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+
+                        <div id="dropdownMenu"
+                            class="absolute right-0 mt-2 w-48 bg-white text-primary rounded-md shadow-lg py-1 z-10 hidden"
+                            role="menu" aria-hidden="true">
+                            {% if current_user.is_admin %}
+                                <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 hover:bg-gray-100" role="menuitem">Dashboard</a>
+                            {% else %}
+                                <a href="{{ url_for('alumni.dashboard') }}" class="block px-4 py-2 hover:bg-gray-100" role="menuitem">Dashboard</a>
+                                <a href="{{ url_for('alumni.profile') }}" class="block px-4 py-2 hover:bg-gray-100" role="menuitem">My Profile</a>
+                            {% endif %}
+                            <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 hover:bg-gray-100" role="menuitem">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="px-4 py-2 bg-secondary text-primary rounded-md hover:bg-secondary-600 transition-all">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="px-4 py-2 border border-secondary text-secondary rounded-md hover:bg-secondary hover:text-primary transition-all">Register</a>
+                {% endif %}
+                
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="text-white hover:text-secondary transition-all">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button onclick="toggleMobileMenu()" class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
+            <div class="flex flex-col space-y-3">
+                <a href="{{ url_for('main.index') }}" class="hover:text-secondary transition-all">Home</a>
+                <a href="{{ url_for('main.about') }}" class="hover:text-secondary transition-all">About</a>
+                {% if current_user.is_authenticated and not current_user.is_admin %}
+                    <a href="{{ url_for('alumni.directory') }}" class="hover:text-secondary transition-all">Directory</a>
+                {% endif %}
+                <a href="{{ url_for('events.index') }}" class="hover:text-secondary transition-all">Events</a>
+                <a href="{{ url_for('contributions.index') }}" class="hover:text-secondary transition-all">Contributions</a>
+                <a href="{{ url_for('main.contact') }}" class="hover:text-secondary transition-all">Contact</a>
+                
+                {% if current_user.is_authenticated %}
+                    <div class="border-t border-gray-700 pt-3 mt-3">
+                        {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="block py-2 hover:text-secondary">Dashboard</a>
+                        {% else %}
+                            <a href="{{ url_for('alumni.dashboard') }}" class="block py-2 hover:text-secondary">Dashboard</a>
+                            <a href="{{ url_for('alumni.profile') }}" class="block py-2 hover:text-secondary">My Profile</a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.logout') }}" class="block py-2 hover:text-secondary">Logout</a>
+                    </div>
+                {% else %}
+                    <div class="flex space-x-2 mt-3">
+                        <a href="{{ url_for('auth.login') }}" class="flex-1 px-4 py-2 bg-secondary text-primary rounded-md hover:bg-secondary-600 transition-all text-center">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="flex-1 px-4 py-2 border border-secondary text-secondary rounded-md hover:bg-secondary hover:text-primary transition-all text-center">Register</a>
+                    </div>
+                {% endif %}
+                
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="text-white hover:text-secondary transition-all">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                    <span class="ml-2">Toggle Dark Mode</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+</header>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('dropdownButton');
+        const menu = document.getElementById('dropdownMenu');
+
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            menu.classList.toggle('hidden');
+        });
+
+        // Hide the dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!menu.contains(event.target) && !button.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endblock %}

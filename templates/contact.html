@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl font-serif font-bold text-primary dark:text-white text-center mb-12">Contact Us</h1>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Contact Information -->
+                    <div class="md:w-2/5 bg-primary text-white p-8">
+                        <h2 class="text-2xl font-bold mb-6">Get in Touch</h2>
+                        <p class="mb-8">
+                            Have questions or feedback? We'd love to hear from you. Reach out to us using any of the methods below.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold mb-1">Address</h3>
+                                    <p>Federal University Otuoke</p>
+                                    <p>Otuoke, Bayelsa State</p>
+                                    <p>Nigeria</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold mb-1">Phone</h3>
+                                    <p>+234 800 123 4567</p>
+                                    <p>+234 800 987 6543</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold mb-1">Email</h3>
+                                    <p>alumni@fuo.edu.ng</p>
+                                    <p>info@fuo.edu.ng</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold mb-1">Office Hours</h3>
+                                    <p>Monday - Friday: 8:00 AM - 4:00 PM</p>
+                                    <p>Saturday: 9:00 AM - 1:00 PM</p>
+                                    <p>Sunday: Closed</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="font-bold mb-4">Connect With Us</h3>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Form -->
+                    <div class="md:w-3/5 p-8">
+                        <h2 class="text-2xl font-bold text-primary dark:text-white mb-6">Send Us a Message</h2>
+                        
+                        <form action="#" method="POST" class="space-y-6">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Your Name</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white" required>
+                                </div>
+                                
+                                <div>
+                                    <label for="email" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Your Email</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white" required>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Subject</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white" required>
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Message</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white" required></textarea>
+                            </div>
+                            
+                            <div>
+                                <button type="submit" class="px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-600 transition-all">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Section -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-primary dark:text-white mb-6 text-center">Find Us</h2>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                    <div class="h-96 bg-gray-200 dark:bg-gray-700">
+                        <!-- Replace with actual map embed -->
+                        <div class="w-full h-full flex items-center justify-center">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.839854231784!2d6.325694974894302!3d4.797530095177881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x106a1d45c429713b%3A0x1bb2d814135c84f1!2sFederal%20University%20Otuoke%2C%20Bayelsa!5e0!3m2!1sen!2sng!4v1747589518395!5m2!1sen!2sng" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-primary dark:text-white mb-6 text-center">Frequently Asked Questions</h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">How do I update my alumni profile?</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                You can update your profile by logging into your account and navigating to the "My Profile" section in your dashboard.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">How can I get involved with the alumni association?</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                There are many ways to get involved! You can attend events, volunteer for committees, mentor current students, or contribute to projects. Contact us for more information.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">Are my contributions tax-deductible?</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Contributions to the university through the alumni association may be tax-deductible. Please consult with your tax advisor for specific guidance.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">How can I request a transcript or verification of my degree?</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Transcript requests and degree verifications are handled by the university's registrar office. Please contact them directly at registrar@fuo.edu.ng.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <a href="{{ url_for('main.faq') }}" class="text-primary dark:text-secondary hover:underline">
+                            View all FAQs <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

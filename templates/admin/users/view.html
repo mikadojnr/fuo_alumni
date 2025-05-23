@@ -1,0 +1,167 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}User Details{% endblock %}
+{% block page_title %}User Details{% endblock %}
+{% block page_subtitle %}View user information{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-4 flex justify-between items-center border-b">
+        <div>
+            <h3 class="text-lg font-semibold">{{ user.email }}</h3>
+            <p class="text-sm text-gray-600">User ID: {{ user.id }}</p>
+        </div>
+        <div class="flex space-x-2">
+            <a href="{{ url_for('admin.users') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+                <i class="fas fa-arrow-left mr-2"></i> Back to List
+            </a>
+            <a href="{{ url_for('admin.user_edit', user_id=user.id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                <i class="fas fa-edit mr-2"></i> Edit
+            </a>
+        </div>
+    </div>
+    
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Account Information</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Email</p>
+                        <p class="font-semibold">{{ user.email }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Status</p>
+                        <p>
+                            {% if user.is_active %}
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">Inactive</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Role</p>
+                        <p>
+                            {% if user.is_admin %}
+                                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Admin</span>
+                            {% else %}
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Alumni</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Email Verified</p>
+                        <p>
+                            {% if user.email_verified %}
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Verified</span>
+                            {% else %}
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Not Verified</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm text-gray-600">Created At</p>
+                        <p class="font-semibold">{{ user.created_at.strftime('%d %b, %Y at %H:%M') }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                {% if user.is_admin and user.admin %}
+                <h4 class="text-lg font-semibold mb-4">Admin Information</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Name</p>
+                        <p class="font-semibold">{{ user.admin.first_name }} {{ user.admin.last_name }}</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm text-gray-600">Role</p>
+                        <p class="font-semibold">{{ user.admin.role }}</p>
+                    </div>
+                </div>
+                {% elif user.alumni %}
+                <h4 class="text-lg font-semibold mb-4">Alumni Information</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    <div class="flex items-center mb-4">
+                        {% if user.alumni.profile_photo %}
+                        <img src="{{ user.alumni.profile_photo }}" alt="{{ user.alumni.full_name }}" class="w-16 h-16 rounded-full object-cover mr-3">
+                        {% else %}
+                        <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-user text-gray-500"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="font-semibold">{{ user.alumni.full_name }}</h5>
+                            <p class="text-sm text-gray-600">{{ user.alumni.job_title }} at {{ user.alumni.organization }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Faculty</p>
+                            <p class="font-semibold">{{ user.alumni.faculty }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Department</p>
+                            <p class="font-semibold">{{ user.alumni.department }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Graduation Year</p>
+                            <p class="font-semibold">{{ user.alumni.graduation_year }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Degree</p>
+                            <p class="font-semibold">{{ user.alumni.degree }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('admin.alumni_detail', alumni_id=user.alumni.id) }}" class="text-blue-600 hover:underline">
+                            <i class="fas fa-external-link-alt mr-1"></i> View Full Alumni Profile
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="bg-yellow-50 p-4 rounded-md border border-yellow-200">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 mr-3 text-xl"></i>
+                        <div>
+                            <h5 class="font-semibold text-yellow-700">Incomplete Profile</h5>
+                            <p class="text-sm text-yellow-600">This user does not have an associated admin or alumni profile.</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <h4 class="text-lg font-semibold mb-4 mt-6">Activity</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    {% if user.alumni and user.alumni.contributions %}
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Contributions</p>
+                        <p class="font-semibold">{{ contributions|length }} contributions</p>
+                        <p class="text-sm">Total: ₦{{ "{:,.2f}".format(total_contributions_amount) }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if user.alumni and user.alumni.event_attendees %}
+                    <div>
+                        <p class="text-sm text-gray-600">Events Attended</p>
+                        <p class="font-semibold">{{ user.alumni.events.all()|length }} events</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

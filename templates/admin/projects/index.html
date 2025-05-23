@@ -1,0 +1,209 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Manage Projects{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Manage Projects</h1>
+        <a href="{{ url_for('admin.create_project') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <i class="fas fa-plus mr-2"></i> Create New Project
+        </a>
+    </div>
+
+    {% include 'partials/flash.html' %}
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-4 border-b">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-700">All Projects</h2>
+                <div class="flex space-x-2">
+                    <select id="statusFilter" class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="text" id="projectSearch" placeholder="Search projects..." class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timeline</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Goal</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for project in projects %}
+                    <tr data-status="{{ 'active' if project.is_active and project.end_date >= now.date() else 'completed' if not project.is_active and project.end_date < now.date() else 'cancelled' }}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                {% if project.image %}
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <img class="h-10 w-10 rounded-full object-cover" src="{{ project.image }}" alt="{{ project.title }}">
+                                </div>
+                                {% else %}
+                                <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-project-diagram text-gray-500"></i>
+                                </div>
+                                {% endif %}
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ project.title }}</div>
+                                    <div class="text-sm text-gray-500">{{ project.description|truncate(50) }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">Start: {{ project.start_date.strftime('%d %b, %Y') }}</div>
+                            <div class="text-sm text-gray-500">End: {{ project.end_date.strftime('%d %b, %Y') }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">₦{{ "{:,.2f}".format(project.goal_amount) }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="relative pt-1">
+                                <div class="flex mb-2 items-center justify-between">
+                                    <div>
+                                        <span class="text-xs font-semibold inline-block text-blue-600">
+                                            {{ "{:.1f}%".format(project.current_amount / project.goal_amount * 100 if project.goal_amount > 0 else 0) }}
+                                        </span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-semibold inline-block text-blue-600">
+                                            ₦{{ "{:,.2f}".format(project.current_amount) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                                    <div style="width:{{ project.current_amount / project.goal_amount * 100 if project.goal_amount > 0 else 0 }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if project.is_active and project.end_date >= now.date() %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Active
+                            </span>
+                            {% elif not project.is_active and project.end_date < now.date() %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                Completed
+                            </span>
+                            {% else %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Cancelled
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="text-blue-600 hover:text-blue-900 mr-3">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ url_for('admin.edit_project', project_id=project.id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% if project.is_active %}
+                            <button onclick="confirmEndProject({{ project.id }})" class="text-yellow-600 hover:text-yellow-900 mr-3">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                            <button onclick="confirmCancelProject({{ project.id }})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-ban"></i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Project Modal -->
+<div id="cancelProjectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+        <h2 class="text-xl font-bold mb-4">Cancel Project</h2>
+        <p class="mb-6">Are you sure you want to cancel this project? This will mark the project as inactive and it will no longer accept contributions.</p>
+        <div class="flex justify-end space-x-4">
+            <button onclick="closeModal('cancelProjectModal')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                Cancel
+            </button>
+            <form id="cancelProjectForm" method="POST">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Confirm
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- End Project Modal -->
+<div id="endProjectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+        <h2 class="text-xl font-bold mb-4">Complete Project</h2>
+        <p class="mb-6">Are you sure you want to mark this project as completed? This will end the project and it will no longer accept contributions.</p>
+        <div class="flex justify-end space-x-4">
+            <button onclick="closeModal('endProjectModal')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                Cancel
+            </button>
+            <form id="endProjectForm" method="POST">
+                <button type="submit" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                    Confirm
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmCancelProject(projectId) {
+        document.getElementById('cancelProjectForm').action = "{{ url_for('admin.cancel_project', project_id=0) }}".replace('0', projectId);
+        document.getElementById('cancelProjectModal').classList.remove('hidden');
+    }
+    
+    function confirmEndProject(projectId) {
+        document.getElementById('endProjectForm').action = "{{ url_for('admin.end_project', project_id=0) }}".replace('0', projectId);
+        document.getElementById('endProjectModal').classList.remove('hidden');
+    }
+    
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+    
+    // Search functionality
+    document.getElementById('projectSearch').addEventListener('keyup', function() {
+        filterProjects();
+    });
+    
+    document.getElementById('statusFilter').addEventListener('change', function() {
+        filterProjects();
+    });
+    
+    function filterProjects() {
+        const searchTerm = document.getElementById('projectSearch').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilter').value;
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const title = row.querySelector('td:first-child').textContent.toLowerCase();
+            const status = row.getAttribute('data-status');
+            
+            const matchesSearch = title.includes(searchTerm);
+            const matchesStatus = statusFilter === 'all' || status === statusFilter;
+            
+            if (matchesSearch && matchesStatus) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

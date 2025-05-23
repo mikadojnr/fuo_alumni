@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-serif font-bold text-primary dark:text-white text-center mb-8">Frequently Asked Questions</h1>
+            <p class="text-gray-600 dark:text-gray-300 text-center mb-12 max-w-2xl mx-auto">
+                Find answers to common questions about the FUO Alumni Association, membership, events, and contributions.
+            </p>
+            
+            <!-- FAQ Categories -->
+            <div class="mb-12">
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button class="px-4 py-2 bg-primary text-white rounded-md" onclick="filterCategory('all')">
+                        All Questions
+                    </button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterCategory('membership')">
+                        Membership
+                    </button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterCategory('events')">
+                        Events
+                    </button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterCategory('contributions')">
+                        Contributions
+                    </button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterCategory('technical')">
+                        Technical
+                    </button>
+                </div>
+            </div>
+            
+            <!-- FAQ Accordion -->
+            <div class="space-y-6">
+                <!-- Membership Questions -->
+                <div class="faq-category membership">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">How do I become a member of the FUO Alumni Association?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                All graduates of Federal University Otuoke automatically become members of the Alumni Association. To activate your membership and access all benefits, you need to register on this portal. Simply click on the "Register" button in the navigation menu and follow the instructions to create your account.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category membership">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Are there any membership fees?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Basic membership in the FUO Alumni Association is free. However, we do offer premium membership tiers with additional benefits for a nominal annual fee. Details about premium membership options can be found in the "Membership" section of your dashboard after logging in.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category membership">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">How do I update my profile information?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                You can update your profile information by logging into your account and navigating to the "My Profile" section in your dashboard. There, you can edit your personal, academic, and professional information, as well as adjust your privacy settings.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Events Questions -->
+                <div class="faq-category events">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">How can I register for alumni events?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                You can register for events by visiting the "Events" section of the portal. Click on the event you're interested in to view details, and then click the "Register" button. Some events may have limited capacity or require a registration fee, which will be clearly indicated on the event page.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category events">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Can I propose or organize an alumni event?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Yes! We encourage alumni to propose and organize events. Please contact the Alumni Relations Office with your event proposal, including the type of event, target audience, proposed date, and venue. The office will review your proposal and provide guidance on next steps.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category events">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Are virtual events available for international alumni?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Yes, we regularly host virtual events to ensure that our international alumni can participate. These events are clearly marked as "Virtual" in the events calendar. After registering, you'll receive a link to join the event online.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contributions Questions -->
+                <div class="faq-category contributions">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">How can I contribute to university projects?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                You can contribute to university projects by visiting the "Contributions" section of the portal. Browse the active projects, select one that interests you, and follow the instructions to make a contribution. We accept various payment methods, and you can choose to make your contribution anonymous if you prefer.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category contributions">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Are my contributions tax-deductible?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Contributions to the university through the alumni association may be tax-deductible. However, tax laws vary, so we recommend consulting with your tax advisor for specific guidance. We provide receipts for all contributions, which you can access in your contribution history.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category contributions">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">How are contribution funds managed and allocated?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                All contribution funds are managed with transparency and accountability. Funds are allocated specifically to the projects you choose to support. Regular updates on project progress and fund utilization are provided on the project pages. The Alumni Association also publishes an annual financial report that details how all funds were used.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Technical Questions -->
+                <div class="faq-category technical">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">I forgot my password. How can I reset it?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                If you've forgotten your password, click on the "Login" button, then select "Forgot password?" on the login page. Enter your registered email address, and we'll send you instructions to reset your password.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category technical">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Is my personal information secure on this portal?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Yes, we take data security very seriously. Your personal information is encrypted and stored securely. We do not share your information with third parties without your consent. You can also control what information is visible to other alumni through your privacy settings.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-category technical">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-primary dark:text-white">How do I report a technical issue with the portal?</h3>
+                                <i class="fas fa-chevron-down text-primary dark:text-white transition-transform"></i>
+                            </div>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                If you encounter any technical issues, please contact our support team at support@fuo.edu.ng. Include details about the issue, such as what you were trying to do, any error messages you received, and the device and browser you were using. This will help us resolve the issue more quickly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Still Have Questions -->
+            <div class="mt-12 bg-primary text-white rounded-lg p-8 text-center">
+                <h2 class="text-2xl font-bold mb-4">Still Have Questions?</h2>
+                <p class="mb-6">
+                    If you couldn't find the answer to your question, please don't hesitate to contact us directly.
+                </p>
+                <a href="{{ url_for('main.contact') }}" class="px-6 py-3 bg-white text-primary font-bold rounded-md hover:bg-gray-100 transition-all inline-block">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('i');
+        
+        if (answer.classList.contains('hidden')) {
+            answer.classList.remove('hidden');
+            icon.classList.add('transform', 'rotate-180');
+        } else {
+            answer.classList.add('hidden');
+            icon.classList.remove('transform', 'rotate-180');
+        }
+    }
+    
+    function filterCategory(category) {
+        const faqItems = document.querySelectorAll('.faq-category');
+        const buttons = document.querySelectorAll('.mb-12 button');
+        
+        // Reset all buttons
+        buttons.forEach(button => {
+            button.classList.remove('bg-primary', 'text-white');
+            button.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+        });
+        
+        // Highlight selected button
+        event.target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+        event.target.classList.add('bg-primary', 'text-white');
+        
+        if (category === 'all') {
+            faqItems.forEach(item => {
+                item.style.display = 'block';
+            });
+        } else {
+            faqItems.forEach(item => {
+                if (item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    }
+</script>
+{% endblock %}

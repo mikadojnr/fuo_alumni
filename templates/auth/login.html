@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+    <div class="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-primary text-white py-4 px-6">
+            <div class="flex items-center justify-center">
+                <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
+                    <span class="text-primary font-bold">FUO</span>
+                </div>
+                <h2 class="ml-3 text-2xl font-serif font-bold">Alumni Login</h2>
+            </div>
+        </div>
+        
+        <!-- Login Tabs -->
+        <div class="flex border-b border-gray-200 dark:border-gray-700">
+            <button id="alumni-tab" onclick="switchTab('alumni')" class="flex-1 py-3 px-4 text-center font-medium border-b-2 border-primary text-primary dark:text-white">
+                Alumni Login
+            </button>
+            <button id="admin-tab" onclick="switchTab('admin')" class="flex-1 py-3 px-4 text-center font-medium border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white">
+                Admin Login
+            </button>
+        </div>
+        
+        <div class="p-6">
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        {{ form.email(class="pl-10 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="your.email@example.com") }}
+                    </div>
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <p class="text-error text-sm mt-1">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        {{ form.password(class="pl-10 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", id="password") }}
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" data-toggle="password" onclick="togglePasswordVisibility('password')">
+                            <i class="fas fa-eye text-gray-400"></i>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <p class="text-error text-sm mt-1">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        {{ form.remember(class="h-4 w-4 text-secondary focus:ring-secondary border-gray-300 rounded") }}
+                        <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="{{ url_for('auth.forgot_password') }}" class="text-sm text-primary dark:text-secondary hover:underline">
+                        Forgot password?
+                    </a>
+                </div>
+                
+                <div class="mb-6">
+                    {{ form.submit(class="w-full bg-primary hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-md transition-all") }}
+                </div>
+                
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Don't have an account? 
+                        <a href="{{ url_for('auth.register') }}" class="text-primary dark:text-secondary hover:underline font-medium">
+                            Register here
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        // Update tab styling
+        if (tab === 'alumni') {
+            document.getElementById('alumni-tab').classList.add('border-primary', 'text-primary', 'dark:text-white');
+            document.getElementById('alumni-tab').classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            
+            document.getElementById('admin-tab').classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            document.getElementById('admin-tab').classList.remove('border-primary', 'text-primary', 'dark:text-white');
+        } else {
+            document.getElementById('admin-tab').classList.add('border-primary', 'text-primary', 'dark:text-white');
+            document.getElementById('admin-tab').classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            
+            document.getElementById('alumni-tab').classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            document.getElementById('alumni-tab').classList.remove('border-primary', 'text-primary', 'dark:text-white');
+        }
+        
+        // In a real implementation, you might want to change the form action or add a hidden field
+        // to indicate whether this is an admin or alumni login
+    }
+</script>
+{% endblock %}

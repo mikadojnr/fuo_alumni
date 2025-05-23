@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar Navigation -->
+        {% include 'partials/alumni_sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="flex-1 p-4 md:p-8">
+            <!-- Welcome Banner -->
+            <div class="bg-primary text-white rounded-lg p-6 mb-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 opacity-10">
+                    <i class="fas fa-graduation-cap text-9xl transform rotate-12 translate-x-8 -translate-y-4"></i>
+                </div>
+                <h1 class="text-2xl font-bold mb-2">Welcome back, {{ alumni.first_name }}!</h1>
+                <p class="mb-4">Here's what's happening with your alumni network.</p>
+                
+                <!-- Profile Completeness -->
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 max-w-md">
+                    <div class="flex justify-between items-center mb-2">
+                        <span>Profile Completeness</span>
+                        <span class="font-bold">{{ profile_completeness }}%</span>
+                    </div>
+                    <div class="w-full bg-white bg-opacity-30 rounded-full h-2.5">
+                        <div class="bg-secondary h-2.5 rounded-full animate-progress" style="--progress-width: {{ profile_completeness }}%"></div>
+                    </div>
+                    {% if profile_completeness < 100 %}
+                        <a href="{{ url_for('alumni.profile') }}" class="text-sm text-white hover:text-secondary mt-2 inline-block">
+                            <i class="fas fa-arrow-right mr-1"></i> Complete your profile
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Dashboard Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Quick Stats Widget 1 -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-primary dark:text-white">Events Attended</h3>
+                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-primary"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-primary dark:text-white">{{ registered_events|length }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Total events you've registered for</p>
+                    <a href="{{ url_for('events.index') }}" class="text-sm text-primary dark:text-secondary hover:underline mt-4 inline-block">
+                        View all events
+                    </a>
+                </div>
+                
+                <!-- Quick Stats Widget 2 -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-primary dark:text-white">Your Contributions</h3>
+                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-hand-holding-heart text-primary"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-primary dark:text-white">{{ alumni.contributions.count() }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Projects you've supported</p>
+                    <a href="{{ url_for('contributions.history') }}" class="text-sm text-primary dark:text-secondary hover:underline mt-4 inline-block">
+                        View your contributions
+                    </a>
+                </div>
+                
+                <!-- Quick Stats Widget 3 -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-primary dark:text-white">Last Login</h3>
+                        <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-clock text-primary"></i>
+                        </div>
+                    </div>
+                    <p class="text-lg font-bold text-primary dark:text-white">
+                        {% if current_user.last_login %}
+                            {{ current_user.last_login.strftime('%B %d, %Y') }}
+                        {% else %}
+                            First login
+                        {% endif %}
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {% if current_user.last_login %}
+                            at {{ current_user.last_login.strftime('%I:%M %p') }}
+                        {% else %}
+                            Welcome!
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Upcoming Events -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-primary dark:text-white">Upcoming Events</h2>
+                    <a href="{{ url_for('events.index') }}" class="text-sm text-primary dark:text-secondary hover:underline">
+                        View All
+                    </a>
+                </div>
+                
+                {% if upcoming_events %}
+                    <div class="space-y-4">
+                        {% for event in upcoming_events %}
+                            <div class="flex flex-col md:flex-row border-b border-gray-200 dark:border-gray-700 pb-4 last:border-0 last:pb-0">
+                                <div class="md:w-1/4 mb-2 md:mb-0">
+                                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-center inline-block">
+                                        <span class="block text-lg font-bold text-primary dark:text-white">{{ event.date.strftime('%b') }}</span>
+                                        <span class="block text-2xl font-bold text-primary dark:text-white">{{ event.date.strftime('%d') }}</span>
+                                        <span class="block text-sm text-gray-500 dark:text-gray-400">{{ event.date.strftime('%Y') }}</span>
+                                    </div>
+                                </div>
+                                <div class="md:w-3/4">
+                                    <h3 class="text-lg font-bold text-primary dark:text-white">{{ event.title }}</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                        <i class="fas fa-clock mr-1"></i> {{ event.date.strftime('%I:%M %p') }}
+                                        {% if event.location %}
+                                            <span class="mx-2">|</span>
+                                            <i class="fas fa-map-marker-alt mr-1"></i> {{ event.location }}
+                                        {% elif event.is_virtual %}
+                                            <span class="mx-2">|</span>
+                                            <i class="fas fa-video mr-1"></i> Virtual Event
+                                        {% endif %}
+                                    </p>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-2">{{ event.description|truncate(100) }}</p>
+                                    <a href="{{ url_for('events.detail', event_id=event.id) }}" class="text-primary dark:text-secondary hover:underline text-sm">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 mb-4">
+                            <i class="fas fa-calendar-times text-5xl"></i>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">No upcoming events at the moment.</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Check back soon for new events!</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-bold text-primary dark:text-white mb-6">Quick Actions</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="{{ url_for('alumni.profile') }}" class="bg-gray-50 dark:bg-gray-700 hover:bg-primary-50 dark:hover:bg-primary-900 p-4 rounded-lg text-center transition-all">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-user-edit text-primary"></i>
+                        </div>
+                        <span class="block text-primary dark:text-white font-medium">Update Profile</span>
+                    </a>
+                    
+                    <a href="{{ url_for('alumni.directory') }}" class="bg-gray-50 dark:bg-gray-700 hover:bg-primary-50 dark:hover:bg-primary-900 p-4 rounded-lg text-center transition-all">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-users text-primary"></i>
+                        </div>
+                        <span class="block text-primary dark:text-white font-medium">Alumni Directory</span>
+                    </a>
+                    
+                    <a href="{{ url_for('events.index') }}" class="bg-gray-50 dark:bg-gray-700 hover:bg-primary-50 dark:hover:bg-primary-900 p-4 rounded-lg text-center transition-all">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-calendar-alt text-primary"></i>
+                        </div>
+                        <span class="block text-primary dark:text-white font-medium">View Events</span>
+                    </a>
+                    
+                    <a href="{{ url_for('contributions.index') }}" class="bg-gray-50 dark:bg-gray-700 hover:bg-primary-50 dark:hover:bg-primary-900 p-4 rounded-lg text-center transition-all">
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-donate text-primary"></i>
+                        </div>
+                        <span class="block text-primary dark:text-white font-medium">Make Contribution</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="py-12 bg-gray-50 dark:bg-gray-900 px-4">
+    <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-primary text-white py-4 px-6">
+            <div class="flex items-center justify-center">
+                <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
+                    <span class="text-primary font-bold">FUO</span>
+                </div>
+                <h2 class="ml-3 text-2xl font-serif font-bold">Alumni Registration</h2>
+            </div>
+        </div>
+        
+        <!-- Registration Progress -->
+        <div class="px-6 pt-6">
+            <div class="relative">
+                <div class="flex mb-2">
+                    <div class="flex-1 text-center">
+                        <div id="step-1-indicator" class="w-8 h-8 mx-auto bg-primary text-white rounded-full flex items-center justify-center font-bold">1</div>
+                        <div class="text-xs mt-1 text-gray-600 dark:text-gray-400">Personal Info</div>
+                    </div>
+                    <div class="flex-1 text-center">
+                        <div id="step-2-indicator" class="w-8 h-8 mx-auto bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-full flex items-center justify-center font-bold">2</div>
+                        <div class="text-xs mt-1 text-gray-600 dark:text-gray-400">Academic Info</div>
+                    </div>
+                    <div class="flex-1 text-center">
+                        <div id="step-3-indicator" class="w-8 h-8 mx-auto bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-full flex items-center justify-center font-bold">3</div>
+                        <div class="text-xs mt-1 text-gray-600 dark:text-gray-400">Security</div>
+                    </div>
+                </div>
+                <div class="absolute top-4 left-0 right-0 flex h-0.5">
+                    <div id="progress-bar-1" class="flex-1 bg-primary mx-4"></div>
+                    <div id="progress-bar-2" class="flex-1 bg-gray-300 dark:bg-gray-600 mx-4"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <form method="POST" action="{{ url_for('auth.register') }}" id="registration-form">
+                {{ form.hidden_tag() }}
+                
+                <!-- Step 1: Personal Information -->
+                <div id="step-1" class="registration-step">
+                    <h3 class="text-xl font-bold mb-4 text-primary dark:text-white">Personal Information</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="first_name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">First Name</label>
+                            {{ form.first_name(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="Enter your first name") }}
+                            {% if form.first_name.errors %}
+                                {% for error in form.first_name.errors %}
+                                    <p class="text-error text-sm mt-1">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="last_name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Last Name</label>
+                            {{ form.last_name(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="Enter your last name") }}
+                            {% if form.last_name.errors %}
+                                {% for error in form.last_name.errors %}
+                                    <p class="text-error text-sm mt-1">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Email Address</label>
+                        {{ form.email(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="your.email@example.com") }}
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <p class="text-error text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="phone" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Phone Number</label>
+                        {{ form.phone(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="Enter your phone number") }}
+                        {% if form.phone.errors %}
+                            {% for error in form.phone.errors %}
+                                <p class="text-error text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex justify-end mt-6">
+                        <button type="button" onclick="nextStep(1, 2)" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-all">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Academic Information -->
+                <div id="step-2" class="registration-step hidden">
+                    <h3 class="text-xl font-bold mb-4 text-primary dark:text-white">Academic Information</h3>
+                    
+                    <div class="mb-4">
+                        <label for="matriculation_number" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Matriculation Number</label>
+                        {{ form.matriculation_number(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="Enter your matriculation number") }}
+                        {% if form.matriculation_number.errors %}
+                            {% for error in form.matriculation_number.errors %}
+                                <p class="text-error text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="faculty" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Faculty</label>
+                            {{ form.faculty(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white") }}
+                            {% if form.faculty.errors %}
+                                {% for error in form.faculty.errors %}
+                                    <p class="text-error text-sm mt-1">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="department" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Department</label>
+                            {{ form.department(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="Enter your department") }}
+                            {% if form.department.errors %}
+                                {% for error in form.department.errors %}
+                                    <p class="text-error text-sm mt-1">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="graduation_year" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Graduation Year</label>
+                            {{ form.graduation_year(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", placeholder="Enter your graduation year") }}
+                            {% if form.graduation_year.errors %}
+                                {% for error in form.graduation_year.errors %}
+                                    <p class="text-error text-sm mt-1">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="degree" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Degree</label>
+                            {{ form.degree(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white") }}
+                            {% if form.degree.errors %}
+                                {% for error in form.degree.errors %}
+                                    <p class="text-error text-sm mt-1">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="prevStep(2, 1)" class="px-6 py-2 border border-primary text-primary rounded-md hover:bg-primary hover:text-white transition-all">Previous</button>
+                        <button type="button" onclick="nextStep(2, 3)" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-all">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Security -->
+                <div id="step-3" class="registration-step hidden">
+                    <h3 class="text-xl font-bold mb-4 text-primary dark:text-white">Security Information</h3>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Password</label>
+                        <div class="relative">
+                            {{ form.password(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", id="password") }}
+                            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" data-toggle="password" onclick="togglePasswordVisibility('password')">
+                                <i class="fas fa-eye text-gray-400"></i>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <p class="text-error text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <!-- Password Strength Meter -->
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                <div id="password-strength" class="bg-error h-1.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p id="password-strength-text" class="text-xs mt-1 text-gray-500 dark:text-gray-400">Password strength: Too weak</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="confirm_password" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Confirm Password</label>
+                        <div class="relative">
+                            {{ form.confirm_password(class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white", id="confirm_password") }}
+                            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" data-toggle="confirm_password" onclick="togglePasswordVisibility('confirm_password')">
+                                <i class="fas fa-eye text-gray-400"></i>
+                            </button>
+                        </div>
+                        {% if form.confirm_password.errors %}
+                            {% for error in form.confirm_password.errors %}
+                                <p class="text-error text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        <p id="password-match" class="text-xs mt-1 hidden"></p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex items-center">
+                            {{ form.agree_terms(class="h-4 w-4 text-secondary focus:ring-secondary border-gray-300 rounded") }}
+                            <label for="agree_terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                I agree to the <a href="#" class="text-primary dark:text-secondary hover:underline">Terms and Conditions</a> and <a href="#" class="text-primary dark:text-secondary hover:underline">Privacy Policy</a>
+                            </label>
+                        </div>
+                        {% if form.agree_terms.errors %}
+                            {% for error in form.agree_terms.errors %}
+                                <p class="text-error text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="prevStep(3, 2)" class="px-6 py-2 border border-primary text-primary rounded-md hover:bg-primary hover:text-white transition-all">Previous</button>
+                        {{ form.submit(class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-all") }}
+                    </div>
+                </div>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Already have an account? 
+                    <a href="{{ url_for('auth.login') }}" class="text-primary dark:text-secondary hover:underline font-medium">
+                        Login here
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Multi-step form navigation
+    function nextStep(currentStep, nextStep) {
+        // Validate current step
+        if (validateStep(currentStep)) {
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById(`step-${nextStep}`).classList.remove('hidden');
+            
+            // Update progress indicators
+            document.getElementById(`step-${nextStep}-indicator`).classList.remove('bg-gray-300', 'dark:bg-gray-600', 'text-gray-600', 'dark:text-gray-300');
+            document.getElementById(`step-${nextStep}-indicator`).classList.add('bg-primary', 'text-white');
+            
+            // Update progress bar
+            if (nextStep === 3) {
+                document.getElementById('progress-bar-2').classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                document.getElementById('progress-bar-2').classList.add('bg-primary');
+            }
+        }
+    }
+    
+    function prevStep(currentStep, prevStep) {
+        document.getElementById(`step-${currentStep}`).classList.add('hidden');
+        document.getElementById(`step-${prevStep}`).classList.remove('hidden');
+        
+        // Update progress indicators
+        document.getElementById(`step-${currentStep}-indicator`).classList.remove('bg-primary', 'text-white');
+        document.getElementById(`step-${currentStep}-indicator`).classList.add('bg-gray-300', 'dark:bg-gray-600', 'text-gray-600', 'dark:text-gray-300');
+        
+        // Update progress bar
+        if (currentStep === 3) {
+            document.getElementById('progress-bar-2').classList.add('bg-gray-300', 'dark:bg-gray-600');
+            document.getElementById('progress-bar-2').classList.remove('bg-primary');
+        }
+    }
+    
+    function validateStep(step) {
+        // Simple validation - can be expanded
+        if (step === 1) {
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (!firstName || !lastName || !email || !phone) {
+                alert('Please fill in all fields in this step.');
+                return false;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+            
+            return true;
+        } else if (step === 2) {
+            const matriculationNumber = document.getElementById('matriculation_number').value;
+            const faculty = document.getElementById('faculty').value;
+            const department = document.getElementById('department').value;
+            const graduationYear = document.getElementById('graduation_year').value;
+            const degree = document.getElementById('degree').value;
+            
+            if (!matriculationNumber || !faculty || !department || !graduationYear || !degree) {
+                alert('Please fill in all fields in this step.');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        return true;
+    }
+    
+    // Password strength meter
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength += 25;
+        
+        // Contains lowercase
+        if (/[a-z]/.test(password)) strength += 25;
+        
+        // Contains uppercase
+        if (/[A-Z]/.test(password)) strength += 25;
+        
+        // Contains number or special char
+        if (/[0-9!@#$%^&*]/.test(password)) strength += 25;
+        
+        const strengthBar = document.getElementById('password-strength');
+        const strengthText = document.getElementById('password-strength-text');
+        
+        strengthBar.style.width = strength + '%';
+        
+        if (strength < 25) {
+            strengthBar.className = 'bg-error h-1.5 rounded-full';
+            strengthText.textContent = 'Password strength: Too weak';
+            strengthText.className = 'text-xs mt-1 text-error';
+        } else if (strength < 50) {
+            strengthBar.className = 'bg-warning h-1.5 rounded-full';
+            strengthText.textContent = 'Password strength: Weak';
+            strengthText.className = 'text-xs mt-1 text-warning';
+        } else if (strength < 75) {
+            strengthBar.className = 'bg-info h-1.5 rounded-full';
+            strengthText.textContent = 'Password strength: Good';
+            strengthText.className = 'text-xs mt-1 text-info';
+        } else {
+            strengthBar.className = 'bg-success h-1.5 rounded-full';
+            strengthText.textContent = 'Password strength: Strong';
+            strengthText.className = 'text-xs mt-1 text-success';
+        }
+    });
+    
+    // Password match check
+    document.getElementById('confirm_password').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+        const matchText = document.getElementById('password-match');
+        
+        if (confirmPassword) {
+            matchText.classList.remove('hidden');
+            
+            if (password === confirmPassword) {
+                matchText.textContent = 'Passwords match';
+                matchText.className = 'text-xs mt-1 text-success';
+            } else {
+                matchText.textContent = 'Passwords do not match';
+                matchText.className = 'text-xs mt-1 text-error';
+            }
+        } else {
+            matchText.classList.add('hidden');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Add Contribution{% endblock %}
+{% block page_title %}Add Contribution{% endblock %}
+{% block page_subtitle %}Record a new contribution{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-4 flex justify-between items-center border-b">
+        <div>
+            <h3 class="text-lg font-semibold">New Contribution</h3>
+        </div>
+        <div>
+            <a href="{{ url_for('admin.contributions') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+                <i class="fas fa-arrow-left mr-2"></i> Back to List
+            </a>
+        </div>
+    </div>
+    
+    <div class="p-6">
+        {% include 'partials/flash.html' %}
+        
+        <form method="POST" action="{{ url_for('admin.contribution_create') }}">
+            {{ form.csrf_token }}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label for="alumni_id" class="block text-sm font-medium text-gray-700 mb-1">Alumni</label>
+                        {{ form.alumni_id(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        {% if form.alumni_id.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.alumni_id.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                        {{ form.project_id(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        {% if form.project_id.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.project_id.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Amount (₦)</label>
+                        {{ form.amount(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        {% if form.amount.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.amount.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                        {{ form.payment_method(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        {% if form.payment_method.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.payment_method.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="transaction_id" class="block text-sm font-medium text-gray-700 mb-1">Transaction ID</label>
+                        {{ form.transaction_id(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        {% if form.transaction_id.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.transaction_id.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex items-center">
+                            {{ form.is_anonymous(class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded") }}
+                            <label for="is_anonymous" class="ml-2 block text-sm text-gray-700">Anonymous Contribution</label>
+                        </div>
+                        {% if form.is_anonymous.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.is_anonymous.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <label for="dedication" class="block text-sm font-medium text-gray-700 mb-1">Dedication (Optional)</label>
+                {{ form.dedication(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", rows=3) }}
+                {% if form.dedication.errors %}
+                    <div class="text-red-600 text-sm mt-1">{{ form.dedication.errors[0] }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-8 flex justify-end">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                    Save Contribution
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

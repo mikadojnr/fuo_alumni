@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block title %}Contributions - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="bg-primary text-white p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold">Alumni Contributions</h1>
+                        <p>Support university projects and initiatives through your contributions</p>
+                    </div>
+                    
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                        <a href="{{ url_for('admin.create_project') }}" class="mt-4 md:mt-0 px-6 py-2 bg-secondary text-primary font-bold rounded-md hover:bg-secondary-600 transition-all">
+                            <i class="fas fa-plus mr-2"></i> Create Project
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- Impact Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-hand-holding-heart text-2xl text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Total Contributions</h3>
+                                <p class="text-2xl font-bold text-primary dark:text-white">{{ total_contributions }}</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">Alumni supporting university initiatives</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-money-bill-wave text-2xl text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Funds Raised</h3>
+                                <p class="text-2xl font-bold text-primary dark:text-white">₦{{ "{:,.2f}".format(total_amount or 0) }} </p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">Total contributions to date</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-project-diagram text-2xl text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-primary dark:text-white">Active Projects</h3>
+                                <p class="text-2xl font-bold text-primary dark:text-white">{{ active_projects|length }}</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">Projects currently seeking support</p>
+                    </div>
+                </div>
+                
+                <!-- Project Categories -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold text-primary dark:text-white mb-6">Project Categories</h2>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button class="px-4 py-2 bg-primary text-white rounded-md" onclick="filterProjects('all')">
+                            All Projects
+                        </button>
+                        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterProjects('infrastructure')">
+                            Infrastructure
+                        </button>
+                        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterProjects('scholarship')">
+                            Scholarships
+                        </button>
+                        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterProjects('research')">
+                            Research
+                        </button>
+                        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md" onclick="filterProjects('community')">
+                            Community Outreach
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Active Projects -->
+                <div class="mb-12">
+                    <h2 class="text-xl font-bold text-primary dark:text-white mb-6">Active Projects</h2>
+                    
+                    {% if active_projects %}
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {% for project in active_projects %}
+                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all project-card" data-category="{{ project.category }}">
+                                    {% if project.image %}
+                                        <img src="{{ project.image }}" alt="{{ project.title }}" class="w-full h-48 object-cover">
+                                    {% else %}
+                                        <div class="w-full h-48 bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                                            <i class="fas fa-university text-4xl text-gray-400 dark:text-gray-500"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="p-6">
+                                        <div class="flex items-center mb-2">
+                                            <span class="bg-primary-100 dark:bg-primary-900 text-primary dark:text-white text-sm px-3 py-1 rounded-full">
+                                                {{ project.category|title }}
+                                            </span>
+                                        </div>
+                                        
+                                        <h3 class="text-lg font-bold text-primary dark:text-white mb-2">{{ project.title }}</h3>
+                                        
+                                        <p class="text-gray-600 dark:text-gray-300 mb-4">{{ project.description|truncate(100) }}</p>
+                                        
+                                        <div class="mb-4">
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-gray-600 dark:text-gray-300">Progress</span>
+                                                <span class="font-bold text-primary dark:text-white">{{ project.progress_percentage }}%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                                                <div class="bg-secondary h-2.5 rounded-full animate-progress" style="--progress-width: {{ project.progress_percentage }}%"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-600 dark:text-gray-300">
+                                                ₦{{ "{:,.2f}".format(project.current_amount) }} of ₦{{ "{:,.2f}".format(project.goal_amount) }}
+                                            </span>
+                                            <a href="{{ url_for('contributions.project_detail', project_id=project.id) }}" class="px-4 py-2 bg-primary text-white text-sm rounded-md hover:bg-primary-600 transition-all">
+                                                Contribute
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-12 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="text-gray-400 mb-4">
+                                <i class="fas fa-folder-open text-5xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-primary dark:text-white mb-2">No Active Projects</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Check back soon for new projects!</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Completed Projects -->
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-primary dark:text-white">Completed Projects</h2>
+                        <button id="toggle-completed" class="text-primary dark:text-secondary hover:underline text-sm flex items-center">
+                            <span id="toggle-text">Show Completed Projects</span>
+                            <i id="toggle-icon" class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="completed-projects-container" class="hidden">
+                        {% if completed_projects %}
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {% for project in completed_projects %}
+                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all opacity-75 project-card" data-category="{{ project.category }}">
+                                        {% if project.image %}
+                                            <img src="{{ project.image }}" alt="{{ project.title }}" class="w-full h-48 object-cover filter grayscale">
+                                        {% else %}
+                                            <div class="w-full h-48 bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                                                <i class="fas fa-university text-4xl text-gray-400 dark:text-gray-500"></i>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-2">
+                                                <span class="bg-success text-white text-sm px-3 py-1 rounded-full">
+                                                    Completed
+                                                </span>
+                                                <span class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm px-3 py-1 rounded-full ml-2">
+                                                    {{ project.category|title }}
+                                                </span>
+                                            </div>
+                                            
+                                            <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 mb-2">{{ project.title }}</h3>
+                                            
+                                            <p class="text-gray-600 dark:text-gray-300 mb-4">{{ project.description|truncate(100) }}</p>
+                                            
+                                            <div class="mb-4">
+                                                <div class="flex justify-between text-sm mb-1">
+                                                    <span class="text-gray-600 dark:text-gray-300">Completed</span>
+                                                    <span class="font-bold text-success">100%</span>
+                                                </div>
+                                                <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                                                    <div class="bg-success h-2.5 rounded-full w-full"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-gray-600 dark:text-gray-300">
+                                                    Raised: ₦{{ "{:,.2f}".format(project.current_amount) }}
+                                                </span>
+                                                <a href="{{ url_for('contributions.project_detail', project_id=project.id) }}" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition-all">
+                                                    View Details
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-12 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <p class="text-gray-600 dark:text-gray-300">No completed projects available.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle completed projects
+        const toggleCompleted = document.getElementById('toggle-completed');
+        const completedProjectsContainer = document.getElementById('completed-projects-container');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleIcon = document.getElementById('toggle-icon');
+        
+        toggleCompleted.addEventListener('click', function() {
+            completedProjectsContainer.classList.toggle('hidden');
+            
+            if (completedProjectsContainer.classList.contains('hidden')) {
+                toggleText.textContent = 'Show Completed Projects';
+                toggleIcon.classList.remove('fa-chevron-up');
+                toggleIcon.classList.add('fa-chevron-down');
+            } else {
+                toggleText.textContent = 'Hide Completed Projects';
+                toggleIcon.classList.remove('fa-chevron-down');
+                toggleIcon.classList.add('fa-chevron-up');
+            }
+        });
+    });
+    
+    function filterProjects(category) {
+        const projectCards = document.querySelectorAll('.project-card');
+        const buttons = document.querySelectorAll('.mb-8 button');
+        
+        // Reset all buttons
+        buttons.forEach(button => {
+            button.classList.remove('bg-primary', 'text-white');
+            button.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+        });
+        
+        // Highlight selected button
+        event.target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+        event.target.classList.add('bg-primary', 'text-white');
+        
+        if (category === 'all') {
+            projectCards.forEach(card => {
+                card.style.display = 'block';
+            });
+        } else {
+            projectCards.forEach(card => {
+                if (card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    }
+</script>
+{% endblock %}

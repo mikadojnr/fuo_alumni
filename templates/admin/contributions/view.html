@@ -1,0 +1,165 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}View Contribution{% endblock %}
+{% block page_title %}Contribution Details{% endblock %}
+{% block page_subtitle %}View contribution information{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-4 flex justify-between items-center border-b">
+        <div>
+            <h3 class="text-lg font-semibold">Contribution #{{ contribution.id }}</h3>
+            <p class="text-sm text-gray-600">{{ contribution.created_at.strftime('%d %b, %Y at %H:%M') }}</p>
+        </div>
+        <div class="flex space-x-2">
+            <a href="{{ url_for('admin.contributions') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+                <i class="fas fa-arrow-left mr-2"></i> Back to List
+            </a>
+            <a href="{{ url_for('admin.contribution_edit', contribution_id=contribution.id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                <i class="fas fa-edit mr-2"></i> Edit
+            </a>
+        </div>
+    </div>
+    
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Contribution Information</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Amount</p>
+                            <p class="font-semibold text-xl">₦{{ "{:,.2f}".format(contribution.amount) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Payment Method</p>
+                            <p class="font-semibold">
+                                {% if contribution.payment_method == 'credit_card' %}
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Credit Card</span>
+                                {% elif contribution.payment_method == 'bank_transfer' %}
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Bank Transfer</span>
+                                {% elif contribution.payment_method == 'paypal' %}
+                                    <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">PayPal</span>
+                                {% else %}
+                                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">{{ contribution.payment_method }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Transaction ID</p>
+                            <p class="font-semibold">{{ contribution.transaction_id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Anonymous</p>
+                            <p class="font-semibold">{{ 'Yes' if contribution.is_anonymous else 'No' }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if contribution.dedication %}
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600">Dedication</p>
+                        <p class="italic">{{ contribution.dedication }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Project Information</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    <div class="flex items-center mb-4">
+                        {% if contribution.project.image %}
+                        <img src="{{ contribution.project.image }}" alt="{{ contribution.project.title }}" class="w-16 h-16 rounded object-cover mr-3">
+                        {% else %}
+                        <div class="w-16 h-16 rounded bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-project-diagram text-gray-500"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="font-semibold">{{ contribution.project.title }}</h5>
+                            <p class="text-sm text-gray-600">Goal: ₦{{ "{:,.2f}".format(contribution.project.goal_amount) }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-blue-600">
+                                        {{ "{:.1f}%".format(contribution.project.current_amount / contribution.project.goal_amount * 100 if contribution.project.goal_amount > 0 else 0) }}
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs font-semibold inline-block text-blue-600">
+                                        ₦{{ "{:,.2f}".format(contribution.project.current_amount) }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                                <div style="width:{{ contribution.project.current_amount / contribution.project.goal_amount * 100 if contribution.project.goal_amount > 0 else 0 }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('admin.project_view', project_id=contribution.project.id) }}" class="text-blue-600 hover:underline">
+                        <i class="fas fa-external-link-alt mr-1"></i> View Project Details
+                    </a>
+                </div>
+                
+                <h4 class="text-lg font-semibold mb-4 mt-6">Alumni Information</h4>
+                
+                <div class="bg-gray-100 p-4 rounded-md">
+                    {% if contribution.is_anonymous %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-secret text-4xl text-gray-500 mb-2"></i>
+                        <p class="font-semibold">Anonymous Contribution</p>
+                        <p class="text-sm text-gray-600">Alumni details are hidden</p>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center mb-4">
+                        {% if contribution.alumni.profile_photo %}
+                        <img src="{{ contribution.alumni.profile_photo }}" alt="{{ contribution.alumni.full_name }}" class="w-16 h-16 rounded-full object-cover mr-3">
+                        {% else %}
+                        <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-user text-gray-500"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="font-semibold">{{ contribution.alumni.full_name }}</h5>
+                            <p class="text-sm text-gray-600">{{ contribution.alumni.user.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Faculty</p>
+                            <p class="font-semibold">{{ contribution.alumni.faculty }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Department</p>
+                            <p class="font-semibold">{{ contribution.alumni.department }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Graduation Year</p>
+                            <p class="font-semibold">{{ contribution.alumni.graduation_year }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Degree</p>
+                            <p class="font-semibold">{{ contribution.alumni.degree }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('admin.alumni_detail', alumni_id=contribution.alumni.id) }}" class="text-blue-600 hover:underline">
+                            <i class="fas fa-external-link-alt mr-1"></i> View Alumni Profile
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

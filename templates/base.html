@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FUO Alumni Portal{% endblock %}</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configure Tailwind with FUO brand colors -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#002366', // Navy Blue
+                            50: '#E6EBF4',
+                            100: '#C1CFEA',
+                            200: '#7D97D1',
+                            300: '#3A5FB8',
+                            400: '#1A3C8A',
+                            500: '#002366', // Main brand color
+                            600: '#001C52',
+                            700: '#00153F',
+                            800: '#000E2B',
+                            900: '#000718',
+                        },
+                        secondary: {
+                            DEFAULT: '#FFD700', // Gold
+                            50: '#FFFAE6',
+                            100: '#FFF5CC',
+                            200: '#FFEB99',
+                            300: '#FFE066',
+                            400: '#FFD633',
+                            500: '#FFD700', // Accent color
+                            600: '#CCAC00',
+                            700: '#998100',
+                            800: '#665700',
+                            900: '#332C00',
+                        },
+                        accent: {
+                            DEFAULT: '#008080', // Teal
+                            50: '#E6F5F5',
+                            100: '#CCEBEB',
+                            200: '#99D6D6',
+                            300: '#66C2C2',
+                            400: '#33ADAD',
+                            500: '#008080', // Interactive elements
+                            600: '#006666',
+                            700: '#004D4D',
+                            800: '#003333',
+                            900: '#001A1A',
+                        },
+                        background: {
+                            DEFAULT: '#F5F5DC', // Sand Beige
+                        },
+                        success: '#10B981', // Emerald Green
+                        error: '#EF4444',   // Coral Red
+                        warning: '#F59E0B', // Amber
+                        info: '#0EA5E9',    // Sky Blue
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Custom styles that can't be handled by Tailwind */
+        .transition-all {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        /* Progress bar animation */
+        @keyframes progress {
+            0% { width: 0; }
+            100% { width: var(--progress-width); }
+        }
+        
+        .animate-progress {
+            animation: progress 1s ease-out forwards;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen bg-gray-50 flex flex-col">
+    {% include 'partials/navbar.html' %}
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mx-auto px-4 mt-4">
+                {% for category, message in messages %}
+                    {% set alert_class = {
+                        'success': 'bg-success text-white',
+                        'info': 'bg-info text-white',
+                        'warning': 'bg-warning text-white',
+                        'danger': 'bg-error text-white'
+                    } %}
+                    <div class="p-4 mb-4 rounded-lg {{ alert_class.get(category, 'bg-info text-white') }} flex justify-between items-center">
+                        <span>{{ message }}</span>
+                        <button type="button" class="text-white" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% include 'partials/footer.html' %}
+    
+    <!-- JavaScript -->
+    <script>
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+        
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = document.querySelector(`[data-toggle="${inputId}"] i`);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
+        }
+        
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'dark' || 
+            (localStorage.getItem('darkMode') === null && 
+             window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

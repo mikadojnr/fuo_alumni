@@ -1,0 +1,73 @@
+<aside id="sidebar" class="bg-indigo-800 text-white w-64 md:block hidden sidebar overflow-y-auto">
+    <div class="p-4">
+        <div class="mb-6">
+            <div class="flex items-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="font-semibold">{{ current_user.admin.first_name }} {{ current_user.admin.last_name }}</p>
+                    <p class="text-xs text-indigo-300">{{ current_user.admin.role }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav>
+            <ul>
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.dashboard') }}" class="block py-2 px-4 rounded-md {% if request.endpoint == 'admin.dashboard' %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-tachometer-alt w-5 text-center mr-2"></i> Dashboard
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.users') }}" class="block py-2 px-4 rounded-md {% if 'admin.users' in request.endpoint %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-users w-5 text-center mr-2"></i> Users
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.alumni') }}" class="block py-2 px-4 rounded-md {% if 'admin.alumni' in request.endpoint %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-user-graduate w-5 text-center mr-2"></i> Alumni
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.events') }}" class="block py-2 px-4 rounded-md {% if 'admin.events' in request.endpoint %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-calendar-alt w-5 text-center mr-2"></i> Events
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.projects') }}" class="block py-2 px-4 rounded-md {% if 'admin.projects' in request.endpoint %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-project-diagram w-5 text-center mr-2"></i> Projects
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.contributions') }}" class="block py-2 px-4 rounded-md {% if 'admin.contributions' in request.endpoint %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-hand-holding-usd w-5 text-center mr-2"></i> Contributions
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('admin.announcements') }}" class="block py-2 px-4 rounded-md {% if 'admin.announcements' in request.endpoint %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-bullhorn w-5 text-center mr-2"></i> Announcements
+                    </a>
+                </li>
+                
+                <li class="mt-6 border-t border-indigo-700 pt-4">
+                    <a href="{{ url_for('admin.settings') }}" class="block py-2 px-4 rounded-md {% if request.endpoint == 'admin.settings' %}bg-indigo-700{% else %}hover:bg-indigo-700{% endif %}">
+                        <i class="fas fa-cog w-5 text-center mr-2"></i> Settings
+                    </a>
+                </li>
+                
+                <li class="mb-1">
+                    <a href="{{ url_for('auth.logout') }}" class="block py-2 px-4 rounded-md hover:bg-indigo-700">
+                        <i class="fas fa-sign-out-alt w-5 text-center mr-2"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

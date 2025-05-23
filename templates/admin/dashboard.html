@@ -1,0 +1,208 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center">
+            <div class="rounded-full bg-blue-100 p-3">
+                <i class="fas fa-user-graduate text-blue-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-gray-500 text-sm">Total Alumni</h3>
+                <p class="text-2xl font-bold">{{ alumni_count }}</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ url_for('admin.alumni') }}" class="text-blue-600 text-sm hover:underline">View all alumni</a>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center">
+            <div class="rounded-full bg-green-100 p-3">
+                <i class="fas fa-calendar-alt text-green-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-gray-500 text-sm">Total Events</h3>
+                <p class="text-2xl font-bold">{{ event_count }}</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ url_for('admin.events') }}" class="text-green-600 text-sm hover:underline">View all events</a>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center">
+            <div class="rounded-full bg-purple-100 p-3">
+                <i class="fas fa-project-diagram text-purple-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-gray-500 text-sm">Active Projects</h3>
+                <p class="text-2xl font-bold">{{ active_projects_count }}</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ url_for('admin.projects') }}" class="text-purple-600 text-sm hover:underline">View all projects</a>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center">
+            <div class="rounded-full bg-yellow-100 p-3">
+                <i class="fas fa-hand-holding-usd text-yellow-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-gray-500 text-sm">Total Contributions</h3>
+                <p class="text-2xl font-bold">₦{{ '{:,.2f}'.format(contribution_total) }}</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="{{ url_for('admin.contributions') }}" class="text-yellow-600 text-sm hover:underline">View all contributions</a>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Recent Alumni Registrations</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Name</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Department</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Graduation</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alumni in recent_alumni %}
+                    <tr class="border-t">
+                        <td class="py-3 px-4">{{ alumni.full_name }}</td>
+                        <td class="py-3 px-4">{{ alumni.department }}</td>
+                        <td class="py-3 px-4">{{ alumni.graduation_year }}</td>
+                        <td class="py-3 px-4">
+                            <a href="{{ url_for('admin.alumni_detail', alumni_id=alumni.id) }}" class="text-blue-600 hover:underline">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Upcoming Events</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Event</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Date</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Location</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in upcoming_events %}
+                    <tr class="border-t">
+                        <td class="py-3 px-4">{{ event.title }}</td>
+                        <td class="py-3 px-4">{{ event.date.strftime('%d %b, %Y') }}</td>
+                        <td class="py-3 px-4">{{ event.location if not event.is_virtual else 'Virtual' }}</td>
+                        <td class="py-3 px-4">
+                            <a href="{{ url_for('admin.event_detail', event_id=event.id) }}" class="text-blue-600 hover:underline">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Recent Contributions</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Alumni</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Project</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Amount</th>
+                        <th class="py-2 px-4 text-left text-sm font-medium text-gray-600">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contribution in recent_contributions %}
+                    <tr class="border-t">
+                        <td class="py-3 px-4">
+                            {% if contribution.is_anonymous %}
+                                Anonymous
+                            {% else %}
+                                {{ contribution.alumni.full_name }}
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-4">{{ contribution.project.title }}</td>
+                        <td class="py-3 px-4">₦{{ '{:,.2f}'.format(contribution.amount) }}</td>
+                        <td class="py-3 px-4">{{ contribution.created_at.strftime('%d %b, %Y') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Project Funding Progress</h3>
+        <div class="h-64">
+            <canvas id="projectChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Project funding chart
+        const ctx = document.getElementById('projectChart').getContext('2d');
+        const projectChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for project in active_projects %}'{{ project.title }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Current Amount (₦)',
+                    data: [{% for project in active_projects %}{{ project.current_amount }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                    backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                    borderColor: 'rgba(99, 102, 241, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Goal Amount (₦)',
+                    data: [{% for project in active_projects %}{{ project.goal_amount }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                    backgroundColor: 'rgba(209, 213, 219, 0.6)',
+                    borderColor: 'rgba(209, 213, 219, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₦' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

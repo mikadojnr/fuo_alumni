@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Contribution Receipt - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden max-w-3xl mx-auto">
+            <div class="bg-primary text-white p-6">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold">Contribution Receipt</h1>
+                    <div class="flex items-center">
+                        <button onclick="window.print()" class="px-4 py-2 bg-white text-primary rounded-md hover:bg-gray-100 transition-all flex items-center">
+                            <i class="fas fa-print mr-2"></i> Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- Receipt Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-xl">FUO</span>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-primary dark:text-white">Federal University Otuoke</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Alumni Association</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-right">
+                        <p class="text-gray-600 dark:text-gray-400">Receipt #: {{ contribution.id }}</p>
+                        <p class="text-gray-600 dark:text-gray-400">Date: {{ contribution.created_at.strftime('%B %d, %Y') }}</p>
+                    </div>
+                </div>
+                
+                <!-- Contributor Information -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-primary dark:text-white mb-4">Contributor Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Name</p>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">
+                                {% if contribution.is_anonymous %}
+                                    Anonymous Donor
+                                {% else %}
+                                    {{ contribution.alumni.full_name }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Email</p>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">
+                                {% if contribution.is_anonymous %}
+                                    ***********
+                                {% else %}
+                                    {{ current_user.email }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Graduation Year</p>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">
+                                {% if contribution.is_anonymous %}
+                                    ***********
+                                {% else %}
+                                    {{ contribution.alumni.graduation_year }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Faculty/Department</p>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">
+                                {% if contribution.is_anonymous %}
+                                    ***********
+                                {% else %}
+                                    {{ contribution.alumni.faculty }} / {{ contribution.alumni.department }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contribution Details -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-primary dark:text-white mb-4">Contribution Details</h3>
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Project</p>
+                                <p class="text-gray-700 dark:text-gray-300 font-medium">{{ contribution.project.title }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Contribution Date</p>
+                                <p class="text-gray-700 dark:text-gray-300 font-medium">{{ contribution.created_at.strftime('%B %d, %Y') }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Payment Method</p>
+                                <p class="text-gray-700 dark:text-gray-300 font-medium">{{ contribution.payment_method|replace('_', ' ')|title }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Transaction ID</p>
+                                <p class="text-gray-700 dark:text-gray-300 font-medium">
+                                    {% if contribution.transaction_id %}
+                                        {{ contribution.transaction_id }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
+                            <div class="flex justify-between items-center">
+                                <p class="text-lg font-bold text-primary dark:text-white">Contribution Amount</p>
+                                <p class="text-xl font-bold text-primary dark:text-white">₦{{ "{:,.2f}".format(contribution.amount) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dedication -->
+                {% if contribution.dedication %}
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-primary dark:text-white mb-4">Dedication</h3>
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                            <p class="text-gray-700 dark:text-gray-300 italic">
+                                "{{ contribution.dedication }}"
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Thank You Message -->
+                <div class="text-center mb-8">
+                    <div class="text-success mb-4">
+                        <i class="fas fa-heart text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary dark:text-white mb-2">Thank You for Your Contribution!</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Your support helps us build a better future for Federal University Otuoke.
+                    </p>
+                </div>
+                
+                <!-- Footer -->
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-6 text-center">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                        This receipt is issued by Federal University Otuoke Alumni Association.
+                    </p>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                        For questions or concerns, please contact alumni@fuo.edu.ng
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        .container, .container * {
+            visibility: visible;
+        }
+        .container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

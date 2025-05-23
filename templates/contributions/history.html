@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Contribution History - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar Navigation -->
+        {% include 'partials/alumni_sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="flex-1 p-4 md:p-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div class="bg-primary text-white p-6">
+                    <h1 class="text-2xl font-bold">My Contribution History</h1>
+                    <p>Track your contributions to university projects and initiatives</p>
+                </div>
+                
+                <div class="p-6">
+                    <!-- Summary Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">Total Contributions</h3>
+                            <p class="text-3xl font-bold text-primary dark:text-white">{{ contributions|length }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Projects supported</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">Total Amount</h3>
+                            <p class="text-3xl font-bold text-primary dark:text-white">
+                                ₦{{ "{:,.2f}".format(contributions|sum(attribute='amount')) if contributions else "0.00" }}
+                            </p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Contributed to date</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                            <h3 class="text-lg font-bold text-primary dark:text-white mb-2">Last Contribution</h3>
+                            <p class="text-3xl font-bold text-primary dark:text-white">
+                                {% if contributions %}
+                                    {{ contributions[0].created_at.strftime('%b %d') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {% if contributions %}
+                                    {{ contributions[0].created_at.strftime('%Y') }}
+                                {% else %}
+                                    No contributions yet
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Contribution History Table -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold text-primary dark:text-white mb-6">Contribution History</h2>
+                        
+                        {% if contributions %}
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Date
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Project
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Amount
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Payment Method
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Receipt
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {% for contribution in contributions %}
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                    {{ contribution.created_at.strftime('%b %d, %Y') }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                        {{ contribution.project.title }}
+                                                    </div>
+                                                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                        {% if contribution.is_anonymous %}
+                                                            Anonymous contribution
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                                    ₦{{ "{:,.2f}".format(contribution.amount) }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                    {{ contribution.payment_method|replace('_', ' ')|title }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success bg-opacity-10 text-success">
+                                                        Completed
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <a href="{{ url_for('contributions.receipt', contribution_id=contribution.id) }}" class="text-primary dark:text-secondary hover:underline">
+                                                        View Receipt
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-12 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="text-gray-400 mb-4">
+                                    <i class="fas fa-hand-holding-usd text-5xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-primary dark:text-white mb-2">No Contributions Yet</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4">You haven't made any contributions yet.</p>
+                                <a href="{{ url_for('contributions.index') }}" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-all inline-block">
+                                    Browse Projects
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Tax Information -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-primary dark:text-white mb-4">Tax Information</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Your contributions to Federal University Otuoke may be tax-deductible. Please consult with your tax advisor for more information.
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            For tax purposes, you can download a consolidated annual receipt of all your contributions.
+                        </p>
+                        
+                        <div class="mt-4">
+                            <form action="#" method="GET">
+                                <div class="flex items-center space-x-4">
+                                    <select name="year" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-gray-700 dark:text-white">
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-all">
+                                        Download Annual Receipt
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Project Details{% endblock %}
+{% block page_title %}Project Details{% endblock %}
+{% block page_subtitle %}View and manage project information{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-4 flex justify-between items-center border-b">
+                <h3 class="text-lg font-semibold">Project Information</h3>
+                <div class="flex space-x-2">
+                    <a href="{{ url_for('admin.edit_project', project_id=project.id) }}" class="text-yellow-600 hover:text-yellow-800">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </a>
+                    <button onclick="confirmDelete('{{ project.id }}', '{{ project.title }}')" class="text-red-600 hover:text-red-800">
+                        <i class="fas fa-trash mr-1"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4">
+                <div class="flex flex-col md:flex-row">
+                    {% if project.image %}
+                        <div class="md:w-1/3 mb-4 md:mb-0 md:mr-6">
+                            <img src="{{ project.image }}" alt="{{ project.title }}" class="w-full h-auto rounded-lg object-cover">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="{% if project.image %}md:w-2/3{% endif %}">
+                        <h2 class="text-2xl font-bold mb-2">{{ project.title }}</h2>
+                        
+                        <div class="mb-4">
+                            {% if project.is_active %}
+                                {% if project.end_date and project.end_date < now.date() %}
+                                    <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Completed</span>
+                                {% else %}
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">Inactive</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Fundraising Progress</span>
+                                <span class="text-sm font-medium text-gray-700">{{ project.progress_percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-indigo-600 h-2.5 rounded-full" style="width: {{ project.progress_percentage }}%"></div>
+                            </div>
+                            <div class="flex justify-between mt-2">
+                                <span class="text-sm text-gray-500">₦{{ '{:,.2f}'.format(project.current_amount) }}</span>
+                                <span class="text-sm text-gray-500">₦{{ '{:,.2f}'.format(project.goal_amount) }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Timeline</h4>
+                                <p>Start: {{ project.start_date.strftime('%B %d, %Y') }}</p>
+                                {% if project.end_date %}
+                                    <p>End: {{ project.end_date.strftime('%B %d, %Y') }}</p>
+                                {% else %}
+                                    <p>End: No end date</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500">Status</h4>
+                                <div class="flex space-x-2 mt-1">
+                                    {% if project.is_active %}
+                                        <form method="POST" action="{{ url_for('admin.cancel_project', project_id=project.id) }}">
+                                            <button type="submit" class="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-md hover:bg-red-200">
+                                                Deactivate Project
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <form method="POST" action="{{ url_for('admin.cancel_project', project_id=project.id) }}">
+                                            <button type="submit" class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200">
+                                                Activate Project
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    
+                                    {% if project.is_active and not project.end_date %}
+                                        <form method="POST" action="{{ url_for('admin.end_project', project_id=project.id) }}">
+                                            <button type="submit" class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-md hover:bg-yellow-200">
+                                                End Project
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500 mb-2">Description</h4>
+                            <div class="prose max-w-none">
+                                {{ project.description|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-semibold">Contributions</h3>
+                <p class="text-sm text-gray-600">Total: {{ contributions|length }}</p>
+            </div>
+            
+            <div class="p-4">
+                {% if contributions|length > 0 %}
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
+                        {% for contribution in contributions %}
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    {% if contribution.is_anonymous %}
+                                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-user-secret text-gray-500"></i>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Anonymous</span>
+                                            <div class="text-xs text-gray-500">{{ contribution.created_at.strftime('%b %d, %Y') }}</div>
+                                        </div>
+                                    {% else %}
+                                        {% if contribution.alumni.profile_photo %}
+                                            <img src="{{ contribution.alumni.profile_photo }}" alt="{{ contribution.alumni.full_name }}" class="w-10 h-10 rounded-full object-cover mr-3">
+                                        {% else %}
+                                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                                <i class="fas fa-user text-gray-500"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <a href="{{ url_for('admin.alumni_detail', alumni_id=contribution.alumni.id) }}" class="font-medium hover:text-indigo-600">
+                                                {{ contribution.alumni.full_name }}
+                                            </a>
+                                            <div class="text-xs text-gray-500">{{ contribution.created_at.strftime('%b %d, %Y') }}</div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="font-medium">
+                                    ₦{{ '{:,.2f}'.format(contribution.amount) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-6">
+                        <div class="text-gray-400 mb-2">
+                            <i class="fas fa-hand-holding-usd fa-3x"></i>
+                        </div>
+                        <p class="text-gray-500">No contributions yet</p>
+                    </div>
+                {% endif %}
+                
+                <div class="mt-4 pt-4 border-t">
+                    <a href="{{ url_for('admin.contributions') }}?project_id={{ project.id }}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                        <i class="fas fa-list mr-1"></i> View All Contributions
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mt-6">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-semibold">Project Details</h3>
+            </div>
+            
+            <div class="p-4">
+                <div class="space-y-4">
+                    {# 
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Created By</h4>
+                        <p>{{ project.creator.admin.first_name }} {{ project.creator.admin.last_name }}</p>
+                    </div>
+                     #}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Created On</h4>
+                        <p>{{ project.created_at.strftime('%B %d, %Y') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-semibold mb-4">Confirm Deletion</h3>
+        <p class="mb-6">Are you sure you want to delete the project <span id="deleteProjectTitle" class="font-semibold"></span>? This action cannot be undone.</p>
+        <div class="flex justify-end space-x-3">
+            <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                Cancel
+            </button>
+            <form id="deleteForm" method="POST" action="">
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(projectId, projectTitle) {
+        document.getElementById('deleteProjectTitle').textContent = projectTitle;
+        document.getElementById('deleteForm').action = `/admin/projects/${projectId}/delete`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+</script>
+{% endblock %}

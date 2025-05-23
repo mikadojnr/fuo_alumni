@@ -1,0 +1,180 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Edit Project{% endblock %}
+{% block page_title %}Edit Project{% endblock %}
+{% block page_subtitle %}Update project details{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-4 border-b">
+        <h3 class="text-lg font-semibold">Edit Project: {{ project.title }}</h3>
+    </div>
+    
+    <div class="p-4">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-2">
+                    <div class="mb-4">
+                        <label for="{{ form.title.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.title.label.text }} <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.title(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        {% if form.title.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-span-2">
+                    <div class="mb-4">
+                        <label for="{{ form.description.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.description.label.text }} <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.description(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", rows=5) }}
+                        {% if form.description.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label for="{{ form.goal_amount.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.goal_amount.label.text }} <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500">₦</span>
+                            </div>
+                            {{ form.goal_amount(class="w-full pl-8 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        </div>
+                        {% if form.goal_amount.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.goal_amount.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {#  <div>
+                    <div class="mb-4">
+                        <label for="{{ form.current_amount.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.current_amount.label.text }}
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500">₦</span>
+                            </div>
+                            {{ form.current_amount(class="w-full pl-8 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500") }}
+                        </div>
+                        {% if form.current_amount.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.current_amount.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div> #}
+                
+                <div>
+                    <div class="mb-4">
+                        <label for="{{ form.start_date.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.start_date.label.text }} <span class="text-red-500">*</span>
+                        </label>
+                        {{ form.start_date(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", type="date") }}
+                        {% if form.start_date.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.start_date.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label for="{{ form.end_date.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.end_date.label.text }}
+                        </label>
+                        {{ form.end_date(class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", type="date") }}
+                        {% if form.end_date.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.end_date.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <div class="flex items-center">
+                            {{ form.is_active(class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded") }}
+                            <label for="{{ form.is_active.id }}" class="ml-2 block text-sm text-gray-700">
+                                {{ form.is_active.label.text }}
+                            </label>
+                        </div>
+                        {% if form.is_active.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.is_active.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-span-2">
+                    <div class="mb-4">
+                        <label for="{{ form.image.id }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.image.label.text }}
+                        </label>
+                        <div class="mt-1 flex items-center">
+                            {% if project.image %}
+                                <img src="{{ project.image }}" alt="{{ project.title }}" class="h-12 w-12 object-cover rounded-md">
+                            {% else %}
+                                <span class="inline-block h-12 w-12 rounded-md overflow-hidden bg-gray-100">
+                                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </span>
+                            {% endif %}
+                            <div class="ml-5">
+                                {{ form.image(class="focus:outline-none") }}
+                                <p class="mt-1 text-xs text-gray-500">JPG, JPEG, PNG. Max 2MB.</p>
+                            </div>
+                        </div>
+                        {% if form.image.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.image.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 flex items-center justify-end">
+                <a href="{{ url_for('admin.projects') }}" class="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100 mr-2">Cancel</a>
+                {{ form.submit(class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

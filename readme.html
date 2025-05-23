@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUO Alumni System - Installation Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        code {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            padding: 2px 4px;
+            color: #c7254e;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 10px;
+            overflow: auto;
+        }
+        pre code {
+            border: none;
+            padding: 0;
+        }
+        .note {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 6px solid #ffc107;
+            padding: 10px;
+            margin: 15px 0;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #3498db;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FUO Alumni System - Installation Guide</h1>
+    
+    <div class="section">
+        <h2>1. Prerequisites</h2>
+        <p>Before installing the FUO Alumni System, ensure you have the following prerequisites installed on your system:</p>
+        <ul>
+            <li>Python 3.8 or higher</li>
+            <li>MySQL (via XAMPP or standalone MySQL server)</li>
+            <li>Git (optional, for cloning the repository)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>2. Setting Up Python Environment</h2>
+        
+        <div class="step">
+            <h3>2.1. Install Python</h3>
+            <p>If you don't have Python installed, download and install it from <a href="https://www.python.org/downloads/" target="_blank">python.org</a>.</p>
+            <div class="note">
+                <p>Make sure to check "Add Python to PATH" during installation.</p>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>2.2. Verify Python Installation</h3>
+            <p>Open a command prompt or terminal and run:</p>
+            <pre><code>python --version</code></pre>
+            <p>You should see the Python version number. If not, ensure Python is properly installed and added to your PATH.</p>
+        </div>
+        
+        <div class="step">
+            <h3>2.3. Create a Virtual Environment (Recommended)</h3>
+            <p>Navigate to your project directory and create a virtual environment:</p>
+            <pre><code>python -m venv venv</code></pre>
+            
+            <p>Activate the virtual environment:</p>
+            <p>On Windows:</p>
+            <pre><code>venv\Scripts\activate</code></pre>
+            
+            <p>On macOS/Linux:</p>
+            <pre><code>source venv/bin/activate</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Setting Up the Database</h2>
+        
+        <div class="step">
+            <h3>3.1. Install MySQL</h3>
+            <p>You can install MySQL using one of the following methods:</p>
+            
+            <h4>Option 1: Using XAMPP</h4>
+            <ol>
+                <li>Download and install XAMPP from <a href="https://www.apachefriends.org/download.html" target="_blank">apachefriends.org</a></li>
+                <li>Start the XAMPP Control Panel</li>
+                <li>Start the Apache and MySQL services</li>
+                <li>Access phpMyAdmin by clicking the "Admin" button next to MySQL or navigating to <a href="http://localhost/phpmyadmin" target="_blank">http://localhost/phpmyadmin</a></li>
+            </ol>
+            
+            <h4>Option 2: Using MySQL Installer</h4>
+            <ol>
+                <li>Download and install MySQL from <a href="https://dev.mysql.com/downloads/installer/" target="_blank">dev.mysql.com</a></li>
+                <li>Follow the installation wizard instructions</li>
+                <li>Remember the root password you set during installation</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>3.2. Create the Database</h3>
+            
+            <h4>Using phpMyAdmin (XAMPP):</h4>
+            <ol>
+                <li>Open phpMyAdmin at <a href="http://localhost/phpmyadmin" target="_blank">http://localhost/phpmyadmin</a></li>
+                <li>Click on "New" in the left sidebar</li>
+                <li>Enter "fuo_alumni" as the database name</li>
+                <li>Select "utf8mb4_general_ci" as the collation</li>
+                <li>Click "Create"</li>
+            </ol>
+            
+            <h4>Using MySQL Command Line:</h4>
+            <pre><code>mysql -u root -p
+CREATE DATABASE fuo_alumni CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+EXIT;</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Installing the Application</h2>
+        
+        <div class="step">
+            <h3>4.1. Clone or Download the Repository</h3>
+            <p>If using Git:</p>
+            <pre><code>git clone [repository-url]
+cd fuo-alumni-system</code></pre>
+            
+            <p>Alternatively, download and extract the ZIP file of the project to your desired location.</p>
+        </div>
+        
+        <div class="step">
+            <h3>4.2. Install Dependencies</h3>
+            <p>With your virtual environment activated, install the required dependencies (please refer to <strong>2.3</strong> ):</p>
+            <pre><code>pip install -r requirements.txt</code></pre>
+        </div>
+        
+        <div class="step">
+            <h3>4.3. Configure the Application</h3>
+            <p>Create a <code>.env</code> file in the root directory of the project with the following content:</p>
+            <pre><code>FLASK_APP=app.py
+FLASK_ENV=development
+SECRET_KEY=your_secret_key_here
+DATABASE_URI=mysql://root:your_mysql_password@localhost/fuo_alumni</code></pre>
+            
+            <div class="note">
+                <p>Replace <code>your_mysql_password</code> with your actual MySQL password. If you're using XAMPP with default settings, the password might be empty. If no password the <code>DATABASE_URI</code> should look like:</p>
+                <pre><code>DATABASE_URI=mysql://root@localhost/fuo_alumni</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Database Setup and Seeding</h2>
+        
+        <div class="step">
+            <h3>5.1. Import the Database Schema and Seed Data</h3>
+            
+            <h4>Using phpMyAdmin (XAMPP):</h4>
+            <ol>
+                <li>Open phpMyAdmin and select the "fuo_alumni" database</li>
+                <li>Click on the "Import" tab</li>
+                <li>Click "Choose File" and select the "seed_alumni_database.sql" file from the project root</li>
+                <li>Click "Go" to import the database structure and seed data</li>
+            </ol>
+            
+            <h4>Using MySQL Command Line:</h4>
+            <pre><code>mysql -u root -p fuo_alumni < seed_alumni_database.sql</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6. Running the Application</h2>
+        
+        <div class="step">
+            <h3>6.1. Start the Flask Development Server</h3>
+            <p>With your virtual environment activated, run:</p>
+            <pre><code>flask run</code></pre>
+            
+            <p>The application should now be running at <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a></p>
+        </div>
+        
+        <div class="step">
+            <h3>6.2. Access the Application</h3>
+            <p>Open your web browser and navigate to <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a></p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>7. Default Login Credentials</h2>
+        
+        <h3>Admin Account:</h3>
+        <table>
+            <tr>
+                <th>Email</th>
+                <td>admin@alumni.com</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>password123</td>
+            </tr>
+        </table>
+        
+        <h3>User Account:</h3>
+        <table>
+            <tr>
+                <th>Email</th>
+                <td>john.doe@example.com</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>password123</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>8. Application Structure</h2>
+        <pre><code>fuo-alumni-system/
+├── app.py                  # Main application entry point
+├── models.py               # Database models
+├── requirements.txt        # Python dependencies
+├── seed_alumni_database.sql # Database seed file
+├── static/                 # Static files (CSS, JS, images)
+├── templates/              # HTML templates
+├── blueprints/             # Flask blueprints for routes
+│   ├── admin.py            # Admin routes
+│   ├── alumni.py           # Alumni routes
+│   ├── auth.py             # Authentication routes
+│   ├── contributions.py    # Contributions routes
+│   ├── events.py           # Events routes
+│   └── main.py             # Main routes
+├── forms/                  # Form definitions
+│   ├── admin.py            # Admin forms
+│   ├── alumni.py           # Alumni forms
+│   ├── auth.py             # Authentication forms
+│   ├── contributions.py    # Contributions forms
+│   └── events.py           # Events forms
+└── utils/                  # Utility functions and helpers
+    └── decorators.py       # Custom decorators</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>9. Troubleshooting</h2>
+        
+        <h3>Common Issues:</h3>
+        
+        <div class="step">
+            <h4>Database Connection Issues</h4>
+            <p>If you encounter database connection issues:</p>
+            <ul>
+                <li>Verify that MySQL is running</li>
+                <li>Check that the database credentials in the .env file are correct</li>
+                <li>Ensure the "fuo_alumni" database exists</li>
+                <li>Try connecting to the database using a different client to verify credentials</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h4>Missing Dependencies</h4>
+            <p>If you encounter errors about missing modules:</p>
+            <pre><code>pip install -r requirements.txt</code></pre>
+            <p>Make sure your virtual environment is activated when installing dependencies and running the application.</p>
+        </div>
+        
+        <div class="step">
+            <h4>File Upload Issues</h4>
+            <p>If file uploads aren't working:</p>
+            <ul>
+                <li>Ensure the UPLOAD_FOLDER path exists and is writable</li>
+                <li>Check that the folder permissions allow the web server to write to it</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h4>Port Already in Use</h4>
+            <p>If port 5000 is already in use, you can specify a different port:</p>
+            <pre><code>flask run --port=5001</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>10. Additional Configuration</h2>
+        
+        <div class="step">
+            <h3>10.1. Email Configuration</h3>
+            <p>To enable email notifications, add the following to your .env file:</p>
+            <pre><code>MAIL_SERVER=smtp.example.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME=your_email@example.com
+MAIL_PASSWORD=your_email_password
+MAIL_DEFAULT_SENDER=your_email@example.com</code></pre>
+        </div>
+        
+        
+    </div>
+
+    <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px; text-align: center;">
+        <p>FUO Alumni System Documentation - Created for educational purposes</p>
+    </footer>
+</body>
+</html>

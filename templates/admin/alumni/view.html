@@ -1,0 +1,198 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Alumni Profile{% endblock %}
+{% block page_title %}Alumni Profile{% endblock %}
+{% block page_subtitle %}View alumni details{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="p-4 flex justify-between items-center border-b">
+        <div>
+            <h3 class="text-lg font-semibold">{{ alumni.full_name }}</h3>
+            <p class="text-sm text-gray-600">{{ alumni.user.email }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin.alumni') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+                <i class="fas fa-arrow-left mr-2"></i> Back to List
+            </a>
+        </div>
+    </div>
+    
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1">
+                <div class="flex flex-col items-center">
+                    {% if alumni.profile_photo %}
+                    <img src="{{ alumni.profile_photo }}" alt="{{ alumni.full_name }}" class="w-48 h-48 rounded-full object-cover mb-4">
+                    {% else %}
+                    <div class="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                        <i class="fas fa-user text-gray-500 text-6xl"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <h3 class="text-xl font-semibold">{{ alumni.full_name }}</h3>
+                    <p class="text-gray-600">{{ alumni.job_title }}</p>
+                    <p class="text-gray-600">{{ alumni.organization }}</p>
+                    
+                    <div class="mt-4 w-full">
+                        <div class="bg-gray-100 p-4 rounded-md">
+                            <h4 class="font-semibold mb-2">Contact Information</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <i class="fas fa-envelope text-gray-500 w-6"></i>
+                                    <span>{{ alumni.user.email }}</span>
+                                </div>
+                                {% if alumni.phone %}
+                                <div class="flex items-center">
+                                    <i class="fas fa-phone text-gray-500 w-6"></i>
+                                    <span>{{ alumni.phone }}</span>
+                                </div>
+                                {% endif %}
+                                {% if alumni.linkedin_url %}
+                                <div class="flex items-center">
+                                    <i class="fab fa-linkedin text-gray-500 w-6"></i>
+                                    <a href="{{ alumni.linkedin_url }}" target="_blank" class="text-blue-600 hover:underline">LinkedIn Profile</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:col-span-2">
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2">Bio</h4>
+                        <p class="text-gray-700">{{ alumni.bio or 'No bio provided.' }}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-4 rounded-md">
+                            <h4 class="font-semibold mb-2">Academic Information</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Matriculation Number:</span>
+                                    <span>{{ alumni.matriculation_number }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Faculty:</span>
+                                    <span>{{ alumni.faculty }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Department:</span>
+                                    <span>{{ alumni.department }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Graduation Year:</span>
+                                    <span>{{ alumni.graduation_year }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Degree:</span>
+                                    <span>{{ alumni.degree }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 p-4 rounded-md">
+                            <h4 class="font-semibold mb-2">Professional Information</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Job Title:</span>
+                                    <span>{{ alumni.job_title or 'Not provided' }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Organization:</span>
+                                    <span>{{ alumni.organization or 'Not provided' }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Industry:</span>
+                                    <span>{{ alumni.industry or 'Not provided' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="bg-gray-100 p-4 rounded-md">
+                        <h4 class="font-semibold mb-2">Privacy Settings</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="flex items-center">
+                                <i class="fas {{ 'fa-check-circle text-green-600' if alumni.show_email else 'fa-times-circle text-red-600' }} mr-2"></i>
+                                <span>Show Email</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas {{ 'fa-check-circle text-green-600' if alumni.show_phone else 'fa-times-circle text-red-600' }} mr-2"></i>
+                                <span>Show Phone</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas {{ 'fa-check-circle text-green-600' if alumni.show_job else 'fa-times-circle text-red-600' }} mr-2"></i>
+                                <span>Show Job Info</span>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <div class="bg-gray-100 p-4 rounded-md">
+                        <h4 class="font-semibold mb-2">Contributions</h4>
+                        {% if alumni.contributions %}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="py-2 px-3 text-left text-xs font-medium text-gray-600">Project</th>
+                                        <th class="py-2 px-3 text-left text-xs font-medium text-gray-600">Amount</th>
+                                        <th class="py-2 px-3 text-left text-xs font-medium text-gray-600">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contribution in alumni.contributions %}
+                                    <tr class="border-t">
+                                        <td class="py-2 px-3">{{ contribution.project.title }}</td>
+                                        <td class="py-2 px-3">₦{{ "{:,.2f}".format(contribution.amount) }}</td>
+                                        <td class="py-2 px-3">{{ contribution.created_at.strftime('%d %b, %Y') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-600">No contributions yet.</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="bg-gray-100 p-4 rounded-md">
+                        <h4 class="font-semibold mb-2">Event Attendance</h4>
+                        {% if alumni.event_attendees %}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="py-2 px-3 text-left text-xs font-medium text-gray-600">Event</th>
+                                        <th class="py-2 px-3 text-left text-xs font-medium text-gray-600">Date</th>
+                                        <th class="py-2 px-3 text-left text-xs font-medium text-gray-600">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attendee in alumni.event_attendees %}
+                                    <tr class="border-t">
+                                        <td class="py-2 px-3">{{ attendee.event.title }}</td>
+                                        <td class="py-2 px-3">{{ attendee.event.date.strftime('%d %b, %Y') }}</td>
+                                        <td class="py-2 px-3">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ 'bg-green-100 text-green-800' if attendee.status == 'attended' else 'bg-blue-100 text-blue-800' }}">
+                                                {{ attendee.status|capitalize }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-600">No event attendance yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

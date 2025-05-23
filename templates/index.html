@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - FUO Alumni Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-primary text-white">
+    <div class="absolute inset-0 bg-black opacity-40"></div>
+    <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+        <div class="max-w-3xl">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4">Welcome to the FUO Alumni Portal</h1>
+            <p class="text-xl mb-8">Connect with fellow graduates, stay updated on events, and contribute to the growth of Federal University Otuoke.</p>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.register') }}" class="px-6 py-3 bg-secondary text-primary font-bold rounded-md hover:bg-secondary-600 transition-all text-center">Join Us Today</a>
+                    <a href="{{ url_for('auth.login') }}" class="px-6 py-3 border-2 border-white text-white font-bold rounded-md hover:bg-white hover:text-primary transition-all text-center">Login</a>
+                {% else %}
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="px-6 py-3 bg-secondary text-primary font-bold rounded-md hover:bg-secondary-600 transition-all text-center">Go to Dashboard</a>
+                    {% else %}
+                        <a href="{{ url_for('alumni.dashboard') }}" class="px-6 py-3 bg-secondary text-primary font-bold rounded-md hover:bg-secondary-600 transition-all text-center">Go to Dashboard</a>
+                    {% endif %}
+                    <a href="{{ url_for('events.index') }}" class="px-6 py-3 border-2 border-white text-white font-bold rounded-md hover:bg-white hover:text-primary transition-all text-center">View Events</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Overview -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-serif font-bold text-center mb-12 text-primary dark:text-white">What We Offer</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 border-l-4 border-primary hover:shadow-lg transition-all">
+                <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-users text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-primary dark:text-white">Alumni Directory</h3>
+                <p class="text-gray-600 dark:text-gray-300">Connect with fellow graduates across different faculties, departments, and graduation years.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 border-l-4 border-primary hover:shadow-lg transition-all">
+                <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-calendar-alt text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-primary dark:text-white">Event Management</h3>
+                <p class="text-gray-600 dark:text-gray-300">Stay updated on reunions, workshops, and networking events. Register and participate with ease.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 border-l-4 border-primary hover:shadow-lg transition-all">
+                <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-hand-holding-heart text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-primary dark:text-white">Contributions</h3>
+                <p class="text-gray-600 dark:text-gray-300">Support university projects and initiatives through secure online donations and track your impact.</p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 border-l-4 border-primary hover:shadow-lg transition-all">
+                <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-newspaper text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-primary dark:text-white">News & Updates</h3>
+                <p class="text-gray-600 dark:text-gray-300">Get the latest news about the university, alumni achievements, and opportunities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Preview -->
+<section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+                <img src="{{ url_for('static', filename='assets/images/fuo-campus.jpeg') }}" alt="FUO Campus" class="rounded-lg shadow-lg w-full">
+            </div>
+            <div class="md:w-1/2">
+                <h2 class="text-3xl font-serif font-bold mb-4 text-primary dark:text-white">About Our Alumni Network</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    The Federal University Otuoke Alumni Association connects graduates across generations, creating a powerful network of professionals, leaders, and change-makers. Our mission is to foster lifelong relationships, support career development, and contribute to the growth of our alma mater.
+                </p>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    By joining our community, you gain access to exclusive events, mentorship opportunities, and the chance to give back to the institution that helped shape your future.
+                </p>
+                <a href="{{ url_for('main.about') }}" class="px-6 py-3 bg-primary text-white font-bold rounded-md hover:bg-primary-600 transition-all inline-block">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-serif font-bold text-primary dark:text-white">Upcoming Events</h2>
+            <a href="{{ url_for('events.index') }}" class="text-primary dark:text-secondary hover:underline font-bold">View All Events</a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% if upcoming_events %}
+                {% for event in upcoming_events %}
+                    <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all">
+                        {% if event.image %}
+                            <img src="{{ event.image }}" alt="{{ event.title }}" class="w-full h-48 object-cover">
+                        {% else %}
+                            <img src="https://via.placeholder.com/400x200" alt="{{ event.title }}" class="w-full h-48 object-cover">
+                        {% endif %}
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-primary-100 dark:bg-primary-900 text-primary dark:text-white text-sm px-3 py-1 rounded-full">
+                                    {{ event.date.strftime('%b %d, %Y') }}
+                                </span>
+                                {% if event.is_virtual %}
+                                    <span class="bg-accent-100 dark:bg-accent-900 text-accent dark:text-white text-sm px-3 py-1 rounded-full ml-2">
+                                        Virtual
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-white">{{ event.title }}</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                {{ event.description|truncate(100) }}
+                            </p>
+                            <a href="{{ url_for('events.detail', event_id=event.id) }}" class="text-primary dark:text-secondary hover:underline font-bold">Learn More</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-3 text-center py-8">
+                    <p class="text-gray-600 dark:text-gray-300">No upcoming events at the moment. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects -->
+<section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-serif font-bold text-primary dark:text-white">Featured Projects</h2>
+            <a href="{{ url_for('contributions.index') }}" class="text-primary dark:text-secondary hover:underline font-bold">View All Projects</a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% if featured_projects %}
+                {% for project in featured_projects %}
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all">
+                        {% if project.image %}
+                            <img src="{{ project.image }}" alt="{{ project.title }}" class="w-full h-48 object-cover">
+                        {% else %}
+                            <img src="https://via.placeholder.com/400x200" alt="{{ project.title }}" class="w-full h-48 object-cover">
+                        {% endif %}
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-white">{{ project.title }}</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                {{ project.description|truncate(100) }}
+                            </p>
+                            
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-300">Progress</span>
+                                    <span class="font-bold text-primary dark:text-white">{{ project.progress_percentage }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                    <div class="bg-secondary h-2.5 rounded-full animate-progress" style="--progress-width: {{ project.progress_percentage }}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 dark:text-gray-300">
+                                    ₦{{ "{:,.2f}".format(project.current_amount) }} of ₦{{ "{:,.2f}".format(project.goal_amount) }}
+                                </span>
+                                <a href="{{ url_for('contributions.project_detail', project_id=project.id) }}" class="px-4 py-2 bg-primary text-white text-sm rounded-md hover:bg-primary-600 transition-all">Contribute</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-3 text-center py-8">
+                    <p class="text-gray-600 dark:text-gray-300">No active projects at the moment. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-16 bg-primary text-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-serif font-bold text-center mb-12">What Our Alumni Say</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="bg-primary-600 rounded-lg p-6 relative">
+                <div class="absolute -top-6 left-6">
+                    <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
+                        <span class="text-primary font-bold">JD</span>
+                    </div>
+                </div>
+                <div class="pt-6">
+                    <p class="mb-4 italic">"The alumni network has been instrumental in my career growth. I've connected with professionals in my field and even found my current job through a fellow alumnus."</p>
+                    <div>
+                        <p class="font-bold">John Doe</p>
+                        <p class="text-sm">Class of 2015, Computer Science</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="bg-primary-600 rounded-lg p-6 relative">
+                <div class="absolute -top-6 left-6">
+                    <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
+                        <span class="text-primary font-bold">MJ</span>
+                    </div>
+                </div>
+                <div class="pt-6">
+                    <p class="mb-4 italic">"Being able to contribute to university projects gives me a sense of giving back. I'm proud to see how my contributions have helped improve campus facilities."</p>
+                    <div>
+                        <p class="font-bold">Mary Johnson</p>
+                        <p class="text-sm">Class of 2012, Business Administration</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="bg-primary-600 rounded-lg p-6 relative">
+                <div class="absolute -top-6 left-6">
+                    <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
+                        <span class="text-primary font-bold">RO</span>
+                    </div>
+                </div>
+                <div class="pt-6">
+                    <p class="mb-4 italic">"The events organized by the alumni association are always insightful and fun. It's great to reconnect with old friends and make new connections in a professional setting."</p>
+                    <div>
+                        <p class="font-bold">Robert Okoye</p>
+                        <p class="text-sm">Class of 2018, Engineering</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-serif font-bold mb-4 text-primary dark:text-white">Ready to Connect with Fellow Alumni?</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+            Join our growing community of FUO graduates and start networking, participating in events, and contributing to university initiatives.
+        </p>
+        
+        {% if not current_user.is_authenticated %}
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="{{ url_for('auth.register') }}" class="px-8 py-3 bg-primary text-white font-bold rounded-md hover:bg-primary-600 transition-all">Register Now</a>
+                <a href="{{ url_for('auth.login') }}" class="px-8 py-3 bg-secondary text-primary font-bold rounded-md hover:bg-secondary-600 transition-all">Login</a>
+            </div>
+        {% else %}
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="{{ url_for('events.index') }}" class="px-8 py-3 bg-primary text-white font-bold rounded-md hover:bg-primary-600 transition-all">Explore Events</a>
+                <a href="{{ url_for('contributions.index') }}" class="px-8 py-3 bg-secondary text-primary font-bold rounded-md hover:bg-secondary-600 transition-all">Support Projects</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
