@@ -1,3 +1,4 @@
 .env
 fuo_alumni_venv/
+*_venv
 

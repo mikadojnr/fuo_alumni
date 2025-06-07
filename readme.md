@@ -18,6 +18,7 @@ If you don't have Python installed, download and install it from [python.org](ht
 
 ### 2.2. Verify Python Installation
 
+
 Open a command prompt or terminal and run:
 
 ```bash
@@ -25,26 +26,6 @@ python --version
 ```
 
 You should see the Python version number. If not, ensure Python is properly installed and added to your PATH.
-
-### 2.3. Create a Virtual Environment (Recommended)
-
-Navigate to your project directory and create a virtual environment:
-
-```bash
-python -m venv venv
-```
-
-Activate the virtual environment:
-
-**On Windows:**
-```bash
-venv\Scripts\activate
-```
-
-**On macOS/Linux:**
-```bash
-source venv/bin/activate
-```
 
 ## 3. Setting Up the Database
 
@@ -85,25 +66,39 @@ EXIT;
 
 ## 4. Installing the Application
 
-### 4.1. Clone or Download the Repository
+### 4.1. Download the ZIP file
 
-If using Git:
+Download and extract the ZIP file of the project to your desired location.
+
+### 4.2. Create a Virtual Environment (Recommended)
+
+Navigate to the project directory and create a virtual environment:
+
 ```bash
-git clone [repository-url]
-cd fuo-alumni-system
+python -m venv venv
 ```
 
-Alternatively, download and extract the ZIP file of the project to your desired location.
+Activate the virtual environment:
 
-### 4.2. Install Dependencies
+**On Windows:**
+```bash
+venv\Scripts\activate
+```
 
-With your virtual environment activated, install the required dependencies (please refer to **2.3**):
+**On macOS/Linux:**
+```bash
+source venv/bin/activate
+```
+
+### 4.3. Install Dependencies
+
+With your virtual environment activated, install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4.3. Configure the Application
+### 4.4. Configure the Application
 
 Create a `.env` file in the root directory of the project with the following content:
 
@@ -130,7 +125,7 @@ DATABASE_URI=mysql://root:your_mysql_password@localhost/fuo_alumni
 3. Click "Choose File" and select the "seed_alumni_database.sql" file from the project root
 4. Click "Go" to import the database structure and seed data
 
-#### Using MySQL Command Line:
+#### Using MySQL Command Line (skip if not using MySQL CLI):
 
 ```bash
 mysql -u root -p fuo_alumni < seed_alumni_database.sql
@@ -155,10 +150,10 @@ Open your web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5
 ## 7. Default Login Credentials
 
 ### Admin Account:
-| Field    | Value              |
-|----------|--------------------|
-| Email    | admin@alumni.com   |
-| Password | password123        |
+| Field    | Value                   |
+|----------|-------------------------|
+| Email    | admin@alumni.com        |
+| Password | password123             |
 
 ### User Account:
 | Field    | Value                   |
